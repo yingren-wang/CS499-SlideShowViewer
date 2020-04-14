@@ -48,6 +48,7 @@ namespace Viewer
                 //Build a list of Soundtracks from the specified file
                 ph.ImportedSoundTrackList = de.ImportSoundTracksFromFile(pathToOpen);
 
+                //print TEST soundtrack info
                 foreach (SoundTrack x in ph.ImportedSoundTrackList)
                 {
                     Console.WriteLine(x.Path);
@@ -58,6 +59,7 @@ namespace Viewer
                 //Build a list of slides for the specefied file
                 ph.ImportedSlidesList = de.ImportSlidesFromFile(pathToOpen);
 
+                //print TEST slide info
                 foreach (Slide x in ph.ImportedSlidesList)
                 {
                     Console.WriteLine(x.Path);
@@ -116,6 +118,13 @@ namespace Viewer
 
             //Update Panel with new drawn panels based on current list
             musicLayoutPanel.Update();
+        }
+
+        private void playButton_Click(object sender, EventArgs e)
+        {
+            //make a window for playing the show and display it (passing in current Lists)
+            Form2 showWindow = new Form2(ph.ImportedSoundTrackList, ph.ImportedSlidesList);
+            showWindow.ShowDialog();
         }
     }
 }
