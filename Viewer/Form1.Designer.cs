@@ -35,21 +35,21 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.instructionsTextBox = new System.Windows.Forms.RichTextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
+            this.panel5 = new System.Windows.Forms.Panel();
             this.musicLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
-            this.panel5.SuspendLayout();
             this.panel7.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // fileOpenButton
@@ -75,6 +75,7 @@
             this.playButton.TabIndex = 1;
             this.playButton.Text = "START SHOW";
             this.playButton.UseVisualStyleBackColor = false;
+            this.playButton.Click += new System.EventHandler(this.playButton_Click);
             // 
             // slideDisplayPanel
             // 
@@ -116,6 +117,16 @@
             this.panel2.Size = new System.Drawing.Size(122, 336);
             this.panel2.TabIndex = 5;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Arial Black", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 4);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(101, 15);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "INSTRUCTIONS";
+            // 
             // instructionsTextBox
             // 
             this.instructionsTextBox.BackColor = System.Drawing.Color.Black;
@@ -147,25 +158,6 @@
             this.panel4.Size = new System.Drawing.Size(531, 322);
             this.panel4.TabIndex = 7;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Arial Black", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 4);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(101, 15);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "INSTRUCTIONS";
-            // 
-            // panel5
-            // 
-            this.panel5.BackColor = System.Drawing.Color.Lime;
-            this.panel5.Controls.Add(this.musicLayoutPanel);
-            this.panel5.Location = new System.Drawing.Point(134, 392);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(531, 37);
-            this.panel5.TabIndex = 8;
-            // 
             // panel7
             // 
             this.panel7.Controls.Add(this.label2);
@@ -183,6 +175,15 @@
             this.label2.Size = new System.Drawing.Size(115, 18);
             this.label2.TabIndex = 0;
             this.label2.Text = "PREVIEW PANE";
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.Lime;
+            this.panel5.Controls.Add(this.musicLayoutPanel);
+            this.panel5.Location = new System.Drawing.Point(134, 392);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(531, 37);
+            this.panel5.TabIndex = 8;
             // 
             // musicLayoutPanel
             // 
@@ -227,9 +228,9 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel4.ResumeLayout(false);
-            this.panel5.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
+            this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
