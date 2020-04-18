@@ -36,6 +36,17 @@ namespace Viewer
                 "that you created. \n\n Review your slides, and then click on the \"Start Show\" button when ready!";
         }
 
+
+        private void pb_MouseDown(object sender, MouseEventArgs e)
+        {
+            PictureBox pb = (PictureBox)sender;
+            //var tmp = pb.ImageLocation;
+            //pictureBox1.ImageLocation = tmp;
+            pictureBox1.Image = new Bitmap(pb.Image);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+        }
+
+
         private void fileOpenButton_Click(object sender, EventArgs e)
         {
             var fbd = new FolderBrowserDialog();
@@ -64,7 +75,10 @@ namespace Viewer
                 {
                     Console.WriteLine(x.Path);
                     Console.WriteLine(x.Duration);
+                    
                 }
+
+                
             }
             else
             {
@@ -75,9 +89,28 @@ namespace Viewer
             //now that lists are imported, populate the preview panes
             //populate soundtracks
             populateSoundTrackBar();
-
+            populateSlideBar();
             //populate the slides
             //@TODO: Chandler call your function to put the images in preview panes here!
+        }
+
+
+        private void populateSlideBar()
+        {
+            slideDisplayPanel.Controls.Clear();
+
+            foreach (Slide slide in ph.ImportedSlidesList)
+            {
+                string slideName = Path.GetFileName(slide.Path);
+
+                PictureBox pb = new PictureBox();
+                pb.MouseDown += new MouseEventHandler(pb_MouseDown);
+                pb.Image = new Bitmap(slide.Path);
+                pb.SizeMode = PictureBoxSizeMode.StretchImage;
+
+                slideDisplayPanel.Controls.Add(pb);
+            }
+            slideDisplayPanel.Update();
         }
 
         private void populateSoundTrackBar()
@@ -125,6 +158,18 @@ namespace Viewer
             //make a window for playing the show and display it (passing in current Lists)
             Form2 showWindow = new Form2(ph.ImportedSoundTrackList, ph.ImportedSlidesList);
             showWindow.ShowDialog();
+        }
+
+        private void slideDisplayPanel_Paint(object sender, PaintEventArgs e)
+        {
+            this.slideDisplayPanel.AutoScroll = true;
+            this.slideDisplayPanel.WrapContents = true;
+            this.slideDisplayPanel.VerticalScroll.Enabled = true;
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

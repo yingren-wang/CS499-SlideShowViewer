@@ -87,6 +87,7 @@
             this.slideDisplayPanel.Name = "slideDisplayPanel";
             this.slideDisplayPanel.Size = new System.Drawing.Size(103, 384);
             this.slideDisplayPanel.TabIndex = 2;
+            this.slideDisplayPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.slideDisplayPanel_Paint);
             // 
             // pictureBox1
             // 
@@ -96,6 +97,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(517, 310);
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // panel1
             // 
