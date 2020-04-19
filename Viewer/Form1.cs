@@ -24,6 +24,7 @@ namespace Viewer
         Decoder de = new Decoder();
 
         //Variable Declaration
+        int showDuration;
 
         public Form1()
         {
@@ -66,9 +67,15 @@ namespace Viewer
                     Console.WriteLine(x.Duration);
                 }
 
+                //Update show duration
+                foreach (SoundTrack x in ph.ImportedSoundTrackList)
+                {
+                    showDuration = showDuration + x.Duration;
+                }
 
-                //Build a list of slides for the specefied file
-                ph.ImportedSlidesList = de.ImportSlidesFromFile(pathToOpen);
+
+                    //Build a list of slides for the specefied file
+                    ph.ImportedSlidesList = de.ImportSlidesFromFile(pathToOpen);
 
                 //print TEST slide info
                 foreach (Slide x in ph.ImportedSlidesList)
@@ -115,42 +122,35 @@ namespace Viewer
 
         private void populateSoundTrackBar()
         {
-            //clear panel before redraw
-            musicLayoutPanel.Controls.Clear();
+                //clear panel before redraw
+                musicLayoutPanel.Controls.Clear();
+                foreach (SoundTrack track in ph.ImportedSoundTrackList)
+                {
+                    //string trackName = Path.GetFileName(track.Path);
 
-            int counter = 0;
-
-            foreach (SoundTrack track in ph.ImportedSoundTrackList)
-            {
-                string trackName = Path.GetFileName(track.Path);
-                //build new panel
-                Panel newSoundTrackPanel = new Panel();
-                Label newSoundTrackLabel = new Label();
-                newSoundTrackLabel.AutoSize = true;
-                newSoundTrackLabel.Font = new Font("Arial Black", 9);
-                newSoundTrackLabel.TextAlign = ContentAlignment.BottomCenter;
-                newSoundTrackLabel.Text = trackName;
-                newSoundTrackPanel.Controls.Add(newSoundTrackLabel);
-                musicLayoutPanel.Controls.Add(newSoundTrackPanel);
-
-                //test code
-                Console.WriteLine(counter);
-                Console.WriteLine(trackName);
-                counter++;
-
-
+                    //build new panel
+                    Panel newSoundTrackPanel = new Panel();
+                    Label newSoundTrackLabel = new Label();
+                    newSoundTrackLabel.Font = new Font("Arial Black", 9);
+                    string trackName = Path.GetFileNameWithoutExtension(track.Path);
+                    newSoundTrackLabel.Text = trackName;
+                    newSoundTrackPanel.Controls.Add(newSoundTrackLabel);
+                    musicLayoutPanel.Controls.Add(newSoundTrackPanel);
+                }
+                //Iterator for trackLength percentages
+                int trackLengthIterator = 0;
                 foreach (Panel panel in musicLayoutPanel.Controls)
                 {
                     //format each panel
-
+                    //Handle division based on time of each track
                     panel.BackColor = System.Drawing.Color.LightGreen;
-                    panel.Width = (musicLayoutPanel.Width - 5) / musicLayoutPanel.Controls.Count - 5;
+                    double percentage = (double)(ph.ImportedSoundTrackList.ElementAt(trackLengthIterator).Duration) / (double)(showDuration);
+                    panel.Width = (int)(percentage * ((double)musicLayoutPanel.Width - 5)) - 6;
                     panel.Height = musicLayoutPanel.Height - 5;
+                    trackLengthIterator += 1;
                 }
-            }
-
-            //Update Panel with new drawn panels based on current list
-            musicLayoutPanel.Update();
+                //Update Panel with new drawn panels based on current list
+                musicLayoutPanel.Update();
         }
 
         private void playButton_Click(object sender, EventArgs e)
