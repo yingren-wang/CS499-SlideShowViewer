@@ -35,10 +35,12 @@ namespace Viewer
         private double pausedTime; //holds location in track during pause
         private int totalMinuteDuration = 0;
         private int totalSecondDuration = 0;
+        private int slideCount = 0;
         private BackgroundWorker bgw = new BackgroundWorker(); //This is our worker that plays the musics and updates the progress bar
         private bool paused = false; //used to determine whether slideshow status is paused or playing
         private bool firstPlayPress = true; //to diffirentiate pause/resume from intial play click
         private bool resumeMusic = false;
+        private System.Timers.Timer slideTransitionTimer;
 
 
         public Form2(List<SoundTrack> ListOfTracks, List<Slide> ListOfSlides)
@@ -60,6 +62,10 @@ namespace Viewer
             SlidesToPlay = ListOfSlides;
             this.FormClosed += Close_Stop;
             progressBar.ForeColor = System.Drawing.Color.DeepPink;
+
+            //timer setup
+            
+            
         }
 
         private void Close_Stop(object sender, FormClosedEventArgs e)
@@ -70,6 +76,18 @@ namespace Viewer
         }
 
         private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void setupTimer(Slide slideToTime)
+        {
+            //Get the time in millis
+            slideTransitionTimer = new System.Timers.Timer(slideToTime.Duration * 1000);
+        }
+
+        //Function to reset the timer whenever the current duration is over
+        private void transitionTimerElapsed()
         {
 
         }
@@ -85,6 +103,11 @@ namespace Viewer
                 firstPlayPress = true;
                 paused = false;
                 numTracksToPlay = SoundTracksToPlay.Count;
+
+                //Set up functionality for slides and timers
+                //get size of slideList
+                slideCount = SlidesToPlay.Count();
+                
 
                 //calculate total duration for progress bar
                 foreach (SoundTrack track in SoundTracksToPlay)

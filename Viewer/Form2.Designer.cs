@@ -30,13 +30,17 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.displayedSlidePanel = new System.Windows.Forms.Panel();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.playAndPauseButton = new System.Windows.Forms.Button();
-            this.nextSlideButton = new System.Windows.Forms.Button();
-            this.backSlideButton = new System.Windows.Forms.Button();
-            this.currentTrackLabel = new System.Windows.Forms.Label();
             this.elapsedTimeLabel = new System.Windows.Forms.Label();
+            this.currentTrackLabel = new System.Windows.Forms.Label();
+            this.backSlideButton = new System.Windows.Forms.Button();
+            this.nextSlideButton = new System.Windows.Forms.Button();
+            this.playAndPauseButton = new System.Windows.Forms.Button();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.displayedSlidePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // displayedSlidePanel
@@ -45,6 +49,8 @@
             this.displayedSlidePanel.BackColor = System.Drawing.Color.Transparent;
             this.displayedSlidePanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("displayedSlidePanel.BackgroundImage")));
             this.displayedSlidePanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.displayedSlidePanel.Controls.Add(this.pictureBox2);
+            this.displayedSlidePanel.Controls.Add(this.pictureBox1);
             this.displayedSlidePanel.Controls.Add(this.elapsedTimeLabel);
             this.displayedSlidePanel.Controls.Add(this.currentTrackLabel);
             this.displayedSlidePanel.Controls.Add(this.backSlideButton);
@@ -57,13 +63,50 @@
             this.displayedSlidePanel.Size = new System.Drawing.Size(1088, 635);
             this.displayedSlidePanel.TabIndex = 0;
             // 
-            // progressBar
+            // elapsedTimeLabel
             // 
-            this.progressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.progressBar.Location = new System.Drawing.Point(0, 625);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(1088, 10);
-            this.progressBar.TabIndex = 0;
+            this.elapsedTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.elapsedTimeLabel.AutoSize = true;
+            this.elapsedTimeLabel.ForeColor = System.Drawing.Color.Lime;
+            this.elapsedTimeLabel.Location = new System.Drawing.Point(1025, 609);
+            this.elapsedTimeLabel.Name = "elapsedTimeLabel";
+            this.elapsedTimeLabel.Size = new System.Drawing.Size(60, 13);
+            this.elapsedTimeLabel.TabIndex = 5;
+            this.elapsedTimeLabel.Text = "0:00 / 0:00";
+            this.elapsedTimeLabel.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // currentTrackLabel
+            // 
+            this.currentTrackLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.currentTrackLabel.AutoSize = true;
+            this.currentTrackLabel.ForeColor = System.Drawing.Color.Lime;
+            this.currentTrackLabel.Location = new System.Drawing.Point(7, 609);
+            this.currentTrackLabel.Name = "currentTrackLabel";
+            this.currentTrackLabel.Size = new System.Drawing.Size(96, 13);
+            this.currentTrackLabel.TabIndex = 4;
+            this.currentTrackLabel.Text = "No Tracks Loaded";
+            // 
+            // backSlideButton
+            // 
+            this.backSlideButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.backSlideButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("backSlideButton.BackgroundImage")));
+            this.backSlideButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.backSlideButton.Location = new System.Drawing.Point(380, 590);
+            this.backSlideButton.Name = "backSlideButton";
+            this.backSlideButton.Size = new System.Drawing.Size(104, 30);
+            this.backSlideButton.TabIndex = 3;
+            this.backSlideButton.UseVisualStyleBackColor = true;
+            // 
+            // nextSlideButton
+            // 
+            this.nextSlideButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.nextSlideButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("nextSlideButton.BackgroundImage")));
+            this.nextSlideButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.nextSlideButton.Location = new System.Drawing.Point(564, 589);
+            this.nextSlideButton.Name = "nextSlideButton";
+            this.nextSlideButton.Size = new System.Drawing.Size(101, 31);
+            this.nextSlideButton.TabIndex = 2;
+            this.nextSlideButton.UseVisualStyleBackColor = true;
             // 
             // playAndPauseButton
             // 
@@ -77,50 +120,29 @@
             this.playAndPauseButton.UseVisualStyleBackColor = true;
             this.playAndPauseButton.Click += new System.EventHandler(this.playAndPauseButton_Click);
             // 
-            // nextSlideButton
+            // progressBar
             // 
-            this.nextSlideButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.nextSlideButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("nextSlideButton.BackgroundImage")));
-            this.nextSlideButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.nextSlideButton.Location = new System.Drawing.Point(564, 589);
-            this.nextSlideButton.Name = "nextSlideButton";
-            this.nextSlideButton.Size = new System.Drawing.Size(101, 31);
-            this.nextSlideButton.TabIndex = 2;
-            this.nextSlideButton.UseVisualStyleBackColor = true;
+            this.progressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.progressBar.Location = new System.Drawing.Point(0, 625);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(1088, 10);
+            this.progressBar.TabIndex = 0;
             // 
-            // backSlideButton
+            // pictureBox1
             // 
-            this.backSlideButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.backSlideButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("backSlideButton.BackgroundImage")));
-            this.backSlideButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.backSlideButton.Location = new System.Drawing.Point(380, 590);
-            this.backSlideButton.Name = "backSlideButton";
-            this.backSlideButton.Size = new System.Drawing.Size(104, 30);
-            this.backSlideButton.TabIndex = 3;
-            this.backSlideButton.UseVisualStyleBackColor = true;
+            this.pictureBox1.Location = new System.Drawing.Point(10, 12);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(1066, 532);
+            this.pictureBox1.TabIndex = 6;
+            this.pictureBox1.TabStop = false;
             // 
-            // currentTrackLabel
+            // pictureBox2
             // 
-            this.currentTrackLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.currentTrackLabel.AutoSize = true;
-            this.currentTrackLabel.ForeColor = System.Drawing.Color.Lime;
-            this.currentTrackLabel.Location = new System.Drawing.Point(7, 609);
-            this.currentTrackLabel.Name = "currentTrackLabel";
-            this.currentTrackLabel.Size = new System.Drawing.Size(96, 13);
-            this.currentTrackLabel.TabIndex = 4;
-            this.currentTrackLabel.Text = "No Tracks Loaded";
-            // 
-            // elapsedTimeLabel
-            // 
-            this.elapsedTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.elapsedTimeLabel.AutoSize = true;
-            this.elapsedTimeLabel.ForeColor = System.Drawing.Color.Lime;
-            this.elapsedTimeLabel.Location = new System.Drawing.Point(1025, 609);
-            this.elapsedTimeLabel.Name = "elapsedTimeLabel";
-            this.elapsedTimeLabel.Size = new System.Drawing.Size(60, 13);
-            this.elapsedTimeLabel.TabIndex = 5;
-            this.elapsedTimeLabel.Text = "0:00 / 0:00";
-            this.elapsedTimeLabel.Click += new System.EventHandler(this.label1_Click);
+            this.pictureBox2.Location = new System.Drawing.Point(11, 12);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(1066, 532);
+            this.pictureBox2.TabIndex = 7;
+            this.pictureBox2.TabStop = false;
             // 
             // Form2
             // 
@@ -136,6 +158,8 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.displayedSlidePanel.ResumeLayout(false);
             this.displayedSlidePanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -150,5 +174,7 @@
         private System.Windows.Forms.Button nextSlideButton;
         private System.Windows.Forms.Button playAndPauseButton;
         private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

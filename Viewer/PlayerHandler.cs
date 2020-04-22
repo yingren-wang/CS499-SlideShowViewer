@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Viewer
 {
-    public struct Slide
+    public class Slide
     {
         private string path;
         public string Path { get; set; }
