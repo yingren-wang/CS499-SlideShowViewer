@@ -88,7 +88,7 @@ namespace Viewer
             slideTransitionTimer.Interval = (slideToTime.Duration * 1000);
             slideTransitionTimer.Tick += slideTransitionTimer_Tick;
             slideTransitionTimer.Start();
-            Console.WriteLine("New timer started by slide: " + currentSlideIndex);
+            Console.WriteLine("New timer started by slide: " + currentSlideIndex + " set for " + slideTransitionTimer.Interval);
         }
 
         //Function to reset the timer whenever the current duration is over
