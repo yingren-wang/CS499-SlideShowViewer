@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.displayedSlidePanel = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -38,6 +39,7 @@
             this.nextSlideButton = new System.Windows.Forms.Button();
             this.playAndPauseButton = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.slideTransitionTimer = new System.Windows.Forms.Timer(this.components);
             this.displayedSlidePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -152,6 +154,10 @@
             this.progressBar.Size = new System.Drawing.Size(1088, 10);
             this.progressBar.TabIndex = 0;
             // 
+            // slideTransitionTimer
+            // 
+            this.slideTransitionTimer.Tick += new System.EventHandler(this.slideTransitionTimer_Tick);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -184,5 +190,6 @@
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Timer slideTransitionTimer;
     }
 }

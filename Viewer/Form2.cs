@@ -36,11 +36,13 @@ namespace Viewer
         private int totalMinuteDuration = 0;
         private int totalSecondDuration = 0;
         private int slideCount = 0;
+        private int currentSlideIndex = 0;
         private BackgroundWorker bgw = new BackgroundWorker(); //This is our worker that plays the musics and updates the progress bar
         private bool paused = false; //used to determine whether slideshow status is paused or playing
         private bool firstPlayPress = true; //to diffirentiate pause/resume from intial play click
         private bool resumeMusic = false;
-        private System.Timers.Timer slideTransitionTimer;
+        private Slide currentSlide;
+        private Slide nextSlide;
 
 
         public Form2(List<SoundTrack> ListOfTracks, List<Slide> ListOfSlides)
@@ -83,12 +85,72 @@ namespace Viewer
         private void setupTimer(Slide slideToTime)
         {
             //Get the time in millis
-            slideTransitionTimer = new System.Timers.Timer(slideToTime.Duration * 1000);
+            slideTransitionTimer.Interval = (slideToTime.Duration * 1000);
+            slideTransitionTimer.Tick += slideTransitionTimer_Tick;
+            slideTransitionTimer.Start();
+            Console.WriteLine("New timer started by slide: " + currentSlideIndex);
         }
 
         //Function to reset the timer whenever the current duration is over
-        private void transitionTimerElapsed()
+        private void slideTransitionTimer_Tick(object sender, EventArgs e)
         {
+            Console.WriteLine("Timer Has Ticked");
+            slideTransitionTimer.Stop();
+            changeSlides();
+        }
+
+        private void changeSlides()
+        {
+            if (currentSlideIndex == 0)//first slide; initialize boxes
+            {
+                //Transition Functionality Here
+                Console.WriteLine("First slide");
+                //Change the images
+                pictureBox2.Image = new Bitmap(currentSlide.Path);
+                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+                pictureBox1.Image = new Bitmap(nextSlide.Path);
+                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                setupTimer(currentSlide);
+                currentSlideIndex += 1;
+                return;
+            }
+            else if(currentSlideIndex == (slideCount - 2)) //Next to last slide, there isn't a next slide
+            {
+                //Transition Functionality Here
+                Console.WriteLine("Next to Last Slide Cluase Has Been Triggered");
+                //Change the images
+                pictureBox1.Visible = false;
+                currentSlideIndex += 1;
+                currentSlide = SlidesToPlay[currentSlideIndex];
+                pictureBox2.Image = new Bitmap(currentSlide.Path);
+                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+                setupTimer(currentSlide);
+                return;
+            }
+            else if(currentSlideIndex == (slideCount - 1)) //Last slide; there isn't a current slide
+            {
+                //Transition Functionality Here
+                Console.WriteLine("Last slide clause has been triggered");
+                //Change the images
+                pictureBox2.Visible = false;
+                slideTransitionTimer.Stop();
+                return;
+            }
+            else //Normal case
+            {
+                //Transition Functionality Here
+                Console.WriteLine("Normal Case Clause has been triggered");
+                //Change the images
+                currentSlideIndex += 1;
+                currentSlide = SlidesToPlay[currentSlideIndex];
+                nextSlide = SlidesToPlay[currentSlideIndex + 1];
+                pictureBox2.Image = new Bitmap(currentSlide.Path);
+                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+                pictureBox1.Image = new Bitmap(nextSlide.Path);
+                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                setupTimer(currentSlide);
+                return;
+            }
 
         }
 
@@ -107,9 +169,11 @@ namespace Viewer
                 //Set up functionality for slides and timers
                 //get size of slideList
                 slideCount = SlidesToPlay.Count();
+                currentSlideIndex = 0;
+                currentSlide = SlidesToPlay[currentSlideIndex];
+                nextSlide = SlidesToPlay[currentSlideIndex + 1];
 
-                //dummy functionality
-                pictureBox2.BackColor = System.Drawing.Color.Black;
+                changeSlides();
                 
 
                 //calculate total duration for progress bar
@@ -132,7 +196,7 @@ namespace Viewer
                 musicPlaying = true;
                 paused = false;
                 resumeMusic = true;
-                
+                slideTransitionTimer.Start();
                 //start music playing thread again
                 bgw.RunWorkerAsync();
             }
@@ -143,6 +207,7 @@ namespace Viewer
                 paused = true;
                 resumeMusic = false;
                 bgw.CancelAsync();
+                slideTransitionTimer.Stop();
 
                 //reset progess bar at end
                 //progressBar.Value = 0;
@@ -311,5 +376,7 @@ namespace Viewer
             totalMinuteDuration = totalDuration / 60;
             totalSecondDuration = totalDuration % 60;
         }
+
+        
     }
 }
