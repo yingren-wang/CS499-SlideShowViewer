@@ -30,17 +30,17 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.displayedSlidePanel = new System.Windows.Forms.Panel();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.elapsedTimeLabel = new System.Windows.Forms.Label();
             this.currentTrackLabel = new System.Windows.Forms.Label();
             this.backSlideButton = new System.Windows.Forms.Button();
             this.nextSlideButton = new System.Windows.Forms.Button();
             this.playAndPauseButton = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.displayedSlidePanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // displayedSlidePanel
@@ -62,6 +62,30 @@
             this.displayedSlidePanel.Name = "displayedSlidePanel";
             this.displayedSlidePanel.Size = new System.Drawing.Size(1088, 635);
             this.displayedSlidePanel.TabIndex = 0;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox2.Location = new System.Drawing.Point(11, 12);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(1066, 532);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox2.TabIndex = 7;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.Location = new System.Drawing.Point(10, 12);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(1066, 532);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 6;
+            this.pictureBox1.TabStop = false;
             // 
             // elapsedTimeLabel
             // 
@@ -128,22 +152,6 @@
             this.progressBar.Size = new System.Drawing.Size(1088, 10);
             this.progressBar.TabIndex = 0;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(10, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1066, 532);
-            this.pictureBox1.TabIndex = 6;
-            this.pictureBox1.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Location = new System.Drawing.Point(11, 12);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(1066, 532);
-            this.pictureBox2.TabIndex = 7;
-            this.pictureBox2.TabStop = false;
-            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -158,8 +166,8 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.displayedSlidePanel.ResumeLayout(false);
             this.displayedSlidePanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

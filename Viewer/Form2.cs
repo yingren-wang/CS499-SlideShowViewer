@@ -107,6 +107,9 @@ namespace Viewer
                 //Set up functionality for slides and timers
                 //get size of slideList
                 slideCount = SlidesToPlay.Count();
+
+                //dummy functionality
+                pictureBox2.BackColor = System.Drawing.Color.Black;
                 
 
                 //calculate total duration for progress bar
