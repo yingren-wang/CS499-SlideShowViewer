@@ -39,7 +39,7 @@
             this.nextSlideButton = new System.Windows.Forms.Button();
             this.playAndPauseButton = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.slideTransitionTimer = new System.Windows.Forms.Timer(this.components);
+            this.slideChangeTimer = new System.Windows.Forms.Timer(this.components);
             this.displayedSlidePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -70,7 +70,7 @@
             this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox2.Location = new System.Drawing.Point(11, 12);
+            this.pictureBox2.Location = new System.Drawing.Point(10, 12);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(1066, 532);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -154,9 +154,6 @@
             this.progressBar.Size = new System.Drawing.Size(1088, 10);
             this.progressBar.TabIndex = 0;
             // 
-            // slideTransitionTimer
-            // 
-            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -189,6 +186,6 @@
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Timer slideTransitionTimer;
+        private System.Windows.Forms.Timer slideChangeTimer;
     }
 }

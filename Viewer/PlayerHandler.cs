@@ -8,6 +8,15 @@ using System.Threading;
 
 namespace Viewer
 {
+    public enum transitionType
+    {
+        wipeLeft,
+        wipeRight,
+        wipeUp,
+        wipdeDown,
+        crossFade
+    }
+
     public class Slide
     {
         private string path;
@@ -19,14 +28,8 @@ namespace Viewer
         private int transitionTime;
         public int TransitionTime { get; set; }
 
-        public enum transitionType
-        {
-            wipeLeft,
-            wipeRight,
-            wipeUp,
-            wipdeDown,
-            crossFade
-        }
+        public int transitionType;
+        public int TransitionType { get; set; }
 
 
     }

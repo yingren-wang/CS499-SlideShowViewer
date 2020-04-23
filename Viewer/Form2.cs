@@ -44,11 +44,14 @@ namespace Viewer
         private Slide currentSlide;
         private Slide nextSlide;
 
+        // Variable for slide transitions
+        System.Timers.Timer wipeTimer = new System.Timers.Timer();
+
 
         public Form2(List<SoundTrack> ListOfTracks, List<Slide> ListOfSlides)
         {
             InitializeComponent();
-
+            PictureBox.CheckForIllegalCrossThreadCalls = false;
             //used for handling the playing of multiple tracks in succession
             myDispatcher = Dispatcher.CurrentDispatcher;
             currentPlayer.MediaFailed += (s, e) => { Console.WriteLine("Media Failed to play...\n"); };
@@ -66,7 +69,7 @@ namespace Viewer
             progressBar.ForeColor = System.Drawing.Color.DeepPink;
 
             //timer setup
-            slideTransitionTimer.Tick += slideTransitionTimer_Tick;
+            slideChangeTimer.Tick += slideChangeTimer_Tick;
             
         }
 
@@ -82,103 +85,205 @@ namespace Viewer
 
         }
 
-        private void setupTimer(Slide slideToTime)
+        private void setupSlideChangeTimer(Slide slideToTime)
         {
             //Get the time in millis
-            //slideTransitionTimer.Stop();
-            slideTransitionTimer.Interval = (slideToTime.Duration * 1000);
+            //slideChangeTimer.Stop();
+            slideChangeTimer.Interval = (slideToTime.Duration * 1000);
             Console.WriteLine("Timer time interval has changed.");
-            //slideTransitionTimer.Start();
+            //slideChangeTimer.Start();
 
         }
 
         //Function to reset the timer whenever the current duration is over
-        private void slideTransitionTimer_Tick(object sender, EventArgs e)
+        private void slideChangeTimer_Tick(object sender, EventArgs e)
         {
-            slideTransitionTimer.Stop();
+            slideChangeTimer.Stop();
             Console.WriteLine("Timer Has Ticked");
-            //slideTransitionTimer.Dispose();
+            //slideChangeTimer.Dispose();
             //Console.WriteLine("Timer Disposed");
             if (currentSlideIndex != slideCount)
             {
                 currentSlideIndex += 1;
                 changeSlides();
-                slideTransitionTimer.Start();
-                Console.WriteLine("New timer started by slide: " + currentSlideIndex + " set for " + slideTransitionTimer.Interval);
+                slideChangeTimer.Start();
+                Console.WriteLine("New timer started by slide: " + currentSlideIndex + " set for " + slideChangeTimer.Interval);
             }
             else
             {
-                slideTransitionTimer.Stop();
-                slideTransitionTimer.Dispose();
+                slideChangeTimer.Stop();
+                slideChangeTimer.Dispose();
+            }
+        }
+
+        // before doing swipe:
+            // make picturebox1 = picturebox2 content
+            // use picturebox 2 to wipe in
+
+        // when calling:
+            // picturebox1 = currentSlide
+            // picturebox2 = nextSlide, wipetransition
+            // currentSlideIndex++
+        private void wipeTransition(PictureBox slideWipeIn, int transitionType, int duration, string path) 
+        {
+            int movement = 20; // use the slide duration to set up the movement
+            
+            wipeTimer.Interval = 55;
+            // pictureBox2.Image = new Bitmap(slideWipeIn.Path);
+
+            if(transitionType == 1) // wipe right
+            {
+                pictureBox2.Width = 0;
+            }
+            else if(transitionType == 3)
+            {
+                pictureBox2.Height = 0;
+            }
+
+            //pictureBox2.Image = new Bitmap(path);
+            //pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+
+            wipeTimer.Elapsed += (sender, e) => OnWipeTransitionEvent(sender, e, movement, transitionType);
+            wipeTimer.Start();
+        }
+
+        private void OnWipeTransitionEvent(Object sender, System.Timers.ElapsedEventArgs e, int movement, int transitionType)
+        {
+            switch (transitionType)
+            {
+                case 0: // wipe left
+                    if (pictureBox2.Width > 0)
+                    {
+                        pictureBox2.Width -= movement;
+                    }
+                    else
+                    {
+                        wipeTimer.Stop();
+                    }
+                    break;
+                case 1: // wipe right
+
+                    if (pictureBox2.Width < 800)
+                    {
+                        pictureBox2.Width += movement;
+                    }
+                    else
+                    {
+                        wipeTimer.Stop();
+                    }
+                    break;
+                case 2: // wipe up
+                    if (pictureBox2.Height > 0)
+                    {
+                        pictureBox2.Height -= movement;
+                    }
+                    else
+                    {
+                        wipeTimer.Stop();
+                    }
+                    break;
+                case 3: // wipe down
+
+                    if (pictureBox2.Height < 800)
+                    {
+                        pictureBox2.Height += movement;
+                    }
+                    else
+                    {
+                        wipeTimer.Stop();
+                    }
+                    break;
+                //case 4: // crossfade
+                //    break;
             }
         }
 
         private void changeSlides()
         {
-            if (currentSlideIndex == 0)//first slide; initialize boxes
-            {
-                //Transition Functionality Here
-                Console.WriteLine("First slide");
-                //Change the images
-                pictureBox2.Image = new Bitmap(currentSlide.Path);
-                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+            if (currentSlideIndex == 0) {
+
                 pictureBox1.Image = new Bitmap(nextSlide.Path);
                 pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-                setupTimer(currentSlide);
-                slideTransitionTimer.Start();
-                //currentSlideIndex += 1;
-                Console.WriteLine("Current slide is now: " + currentSlideIndex);
-
+                pictureBox2.Image = new Bitmap(currentSlide.Path);
+                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+                // wipeTransition(pictureBox2, currentSlide.transitionType, currentSlide.Duration, currentSlide.Path);
+                setupSlideChangeTimer(currentSlide);
+                slideChangeTimer.Start();
             }
-            /**else if(currentSlideIndex == (slideCount - 2)) //Next to last slide, there isn't a next slide
+            else if(currentSlideIndex < slideCount - 1)
             {
-                //Transition Functionality Here
-                Console.WriteLine("Next to Last Slide Cluase Has Been Triggered");
-                //Change the images
-                pictureBox1.Visible = false;
-                //currentSlideIndex += 1;
-                Console.WriteLine("Current slide is now: " + currentSlideIndex);
                 currentSlide = SlidesToPlay[currentSlideIndex];
                 nextSlide = SlidesToPlay[currentSlideIndex + 1];
                 pictureBox2.Image = new Bitmap(currentSlide.Path);
                 pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-                setupTimer(currentSlide);
-                //slideTransitionTimer.Start();
+                pictureBox1.Image = new Bitmap(nextSlide.Path);
+                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                wipeTransition(pictureBox2, currentSlide.transitionType, currentSlide.Duration, currentSlide.Path);
 
+                setupSlideChangeTimer(currentSlide);
+                slideChangeTimer.Start();
             }
-    */
-            else if(currentSlideIndex == (slideCount - 1)) //Last slide; there isn't a current slide
+            else if(currentSlideIndex == slideCount - 1)
             {
-                //Transition Functionality Here
-                Console.WriteLine("Last slide clause has been triggered");
                 //Change the images
                 pictureBox1.Visible = false;
                 currentSlide = SlidesToPlay[currentSlideIndex];
                 pictureBox2.Image = new Bitmap(currentSlide.Path);
                 pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-                //slideTransitionTimer.Stop();
             }
-            else if(currentSlideIndex == slideCount)
+            else if (currentSlideIndex == slideCount)
             {
                 pictureBox2.Visible = false;
-                slideTransitionTimer.Stop();
+                slideChangeTimer.Stop();
             }
-            else //Normal case
-            {
-                //Transition Functionality Here
-                Console.WriteLine("Normal Case Clause has been triggered");
-                //Change the images
-                //currentSlideIndex += 1;
-                Console.WriteLine("Current slide is now: " + currentSlideIndex);
-                currentSlide = SlidesToPlay[currentSlideIndex];
-                nextSlide = SlidesToPlay[currentSlideIndex + 1];
-                pictureBox2.Image = new Bitmap(currentSlide.Path);
-                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-                pictureBox1.Image = new Bitmap(nextSlide.Path);
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-                setupTimer(currentSlide);
-                //slideTransitionTimer.Start();
-            }
+
+            //if (currentSlideIndex == 0)//first slide; initialize boxes
+            //{
+            //    //Transition Functionality Here
+            //    Console.WriteLine("First slide");
+            //    //Change the images
+            //    pictureBox2.Image = new Bitmap(currentSlide.Path);
+            //    pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+            //    pictureBox1.Image = new Bitmap(nextSlide.Path);
+            //    pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            //    setupSlideChangeTimer(currentSlide);
+            //    slideChangeTimer.Start();
+            //    //currentSlideIndex += 1;
+            //    Console.WriteLine("Current slide is now: " + currentSlideIndex);
+
+            //}
+            //else if(currentSlideIndex == (slideCount - 1)) //Last slide; there isn't a current slide
+            //{
+            //    //Transition Functionality Here
+            //    Console.WriteLine("Last slide clause has been triggered");
+            //    //Change the images
+            //    pictureBox1.Visible = false;
+            //    currentSlide = SlidesToPlay[currentSlideIndex];
+            //    pictureBox2.Image = new Bitmap(currentSlide.Path);
+            //    pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+            //    //slideChangeTimer.Stop();
+            //}
+            //else if(currentSlideIndex == slideCount)
+            //{
+            //    pictureBox2.Visible = false;
+            //    slideChangeTimer.Stop();
+            //}
+            //else //Normal case
+            //{
+            //    //Transition Functionality Here
+            //    Console.WriteLine("Normal Case Clause has been triggered");
+            //    //Change the images
+            //    //currentSlideIndex += 1;
+            //    Console.WriteLine("Current slide is now: " + currentSlideIndex);
+            //    currentSlide = SlidesToPlay[currentSlideIndex];
+            //    nextSlide = SlidesToPlay[currentSlideIndex + 1];
+            //    pictureBox2.Image = new Bitmap(currentSlide.Path);
+            //    pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+            //    pictureBox1.Image = new Bitmap(nextSlide.Path);
+            //    pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            //    setupSlideChangeTimer(currentSlide);
+            //    slideChangeTimer.Start();
+            //}
         }
 
         private void playAndPauseButton_Click(object sender, EventArgs e)
@@ -223,7 +328,7 @@ namespace Viewer
                 musicPlaying = true;
                 paused = false;
                 resumeMusic = true;
-                slideTransitionTimer.Start();
+                slideChangeTimer.Start();
                 //start music playing thread again
                 bgw.RunWorkerAsync();
             }
@@ -234,7 +339,7 @@ namespace Viewer
                 paused = true;
                 resumeMusic = false;
                 bgw.CancelAsync();
-                slideTransitionTimer.Stop();
+                slideChangeTimer.Stop();
 
                 //reset progess bar at end
                 //progressBar.Value = 0;
