@@ -45,6 +45,16 @@ namespace Viewer
         private Slide nextSlide;
 
 
+        // Variables for crossfade transition
+        System.Windows.Forms.Timer fadeTimer = null;
+        Bitmap sourceBmp1 = null;
+        Bitmap sourceBmp2 = null;
+        Bitmap fadeBmp1 = null;
+        Bitmap fadeBmp2 = null;
+        float opacity1 = 0.0f;
+        float opacity2 = 1.0f;
+        float increment = .025f;
+
         public Form2(List<SoundTrack> ListOfTracks, List<Slide> ListOfSlides)
         {
             InitializeComponent();
@@ -113,6 +123,70 @@ namespace Viewer
             }
         }
 
+        public void CrossFadeChange()
+        {
+            opacity1 = 0.0f;
+            opacity2 = 1.0f;
+            increment = 0.05f;
+            // fadeTimer = null;
+        
+            sourceBmp1 = (Bitmap)Image.FromStream(new MemoryStream(File.ReadAllBytes(nextSlide.Path)));
+            sourceBmp2 = (Bitmap)Image.FromStream(new MemoryStream(File.ReadAllBytes(currentSlide.Path)));
+
+            fadeBmp1 = sourceBmp1.Clone() as Bitmap;
+            fadeBmp2 = sourceBmp2.Clone() as Bitmap;
+            
+            fadeTimer = new System.Windows.Forms.Timer() { Interval = 100 };
+            fadeTimer.Tick += this.TimerTick;
+            fadeTimer.Start();
+        }
+
+        public void TimerTick(object sender, EventArgs e)
+        {
+            opacity1 += increment;
+            opacity2 -= increment;
+            if ((opacity1 >= 1.0f || opacity1 <= .0f) || (opacity2 >= 1.0f || opacity2 <= .0f))
+            {
+                increment *= -1;
+                fadeTimer.Stop();
+            }
+            fadeBmp1?.Dispose();
+            fadeBmp2?.Dispose();
+            fadeBmp1 = sourceBmp1.SetOpacity(opacity1);
+            fadeBmp2 = sourceBmp2.SetOpacity(opacity2);
+
+            pictureBox1.Invalidate();
+            pictureBox2.Invalidate();
+            // pictureBox3.Invalidate();
+
+            pictureBox1.Paint += new PaintEventHandler(this.pictureBox1_Paint);
+            pictureBox2.Paint += new PaintEventHandler(this.pictureBox2_Paint);
+            // pictureBox3.Paint += new PaintEventHandler(this.pictureBox3_Paint);
+        }
+
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            if (fadeBmp1 == null) return;
+            var units = GraphicsUnit.Pixel;
+            e.Graphics.DrawImage(fadeBmp1, new RectangleF(PointF.Empty, pictureBox1.ClientSize), fadeBmp1.GetBounds(ref units), units);
+        }
+
+        private void pictureBox2_Paint(object sender, PaintEventArgs e)
+        {
+            if (fadeBmp2 == null) return;
+            var units = GraphicsUnit.Pixel;
+            e.Graphics.DrawImage(fadeBmp2, new RectangleF(PointF.Empty, pictureBox2.ClientSize), fadeBmp2.GetBounds(ref units), units);
+        }
+
+        //private void pictureBox3_Paint(object sender, PaintEventArgs e)
+        //{
+        //    textBox1.Text = "p3 paint";
+        //    if (fadeBmp1 == null || fadeBmp2 == null) return;
+        //    var units = GraphicsUnit.Pixel;
+        //    e.Graphics.DrawImage(fadeBmp2, new RectangleF(PointF.Empty, pictureBox3.ClientSize), fadeBmp2.GetBounds(ref units), units);
+        //    e.Graphics.DrawImage(fadeBmp1, new RectangleF(PointF.Empty, pictureBox3.ClientSize), fadeBmp1.GetBounds(ref units), units);
+        //}
+
         private void changeSlides()
         {
             if (currentSlideIndex == 0)//first slide; initialize boxes
@@ -122,8 +196,9 @@ namespace Viewer
                 //Change the images
                 pictureBox2.Image = new Bitmap(currentSlide.Path);
                 pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-                pictureBox1.Image = new Bitmap(nextSlide.Path);
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                //pictureBox1.Image = new Bitmap(nextSlide.Path);
+                //pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                CrossFadeChange();
                 setupTimer(currentSlide);
                 slideTransitionTimer.Start();
                 //currentSlideIndex += 1;
@@ -156,6 +231,7 @@ namespace Viewer
                 currentSlide = SlidesToPlay[currentSlideIndex];
                 pictureBox2.Image = new Bitmap(currentSlide.Path);
                 pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+                CrossFadeChange();
                 //slideTransitionTimer.Stop();
             }
             else if(currentSlideIndex == slideCount)
@@ -174,8 +250,9 @@ namespace Viewer
                 nextSlide = SlidesToPlay[currentSlideIndex + 1];
                 pictureBox2.Image = new Bitmap(currentSlide.Path);
                 pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-                pictureBox1.Image = new Bitmap(nextSlide.Path);
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                //pictureBox1.Image = new Bitmap(nextSlide.Path);
+                //pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                CrossFadeChange();
                 setupTimer(currentSlide);
                 //slideTransitionTimer.Start();
             }
