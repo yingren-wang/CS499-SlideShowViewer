@@ -88,11 +88,8 @@ namespace Viewer
         private void setupSlideChangeTimer(Slide slideToTime)
         {
             //Get the time in millis
-            //slideChangeTimer.Stop();
             slideChangeTimer.Interval = (slideToTime.Duration * 1000);
             Console.WriteLine("Timer time interval has changed.");
-            //slideChangeTimer.Start();
-
         }
 
         //Function to reset the timer whenever the current duration is over
@@ -100,8 +97,7 @@ namespace Viewer
         {
             slideChangeTimer.Stop();
             Console.WriteLine("Timer Has Ticked");
-            //slideChangeTimer.Dispose();
-            //Console.WriteLine("Timer Disposed");
+
             if (currentSlideIndex != slideCount)
             {
                 currentSlideIndex += 1;
@@ -116,14 +112,7 @@ namespace Viewer
             }
         }
 
-        // before doing swipe:
-            // make picturebox1 = picturebox2 content
-            // use picturebox 2 to wipe in
-
-        // when calling:
-            // picturebox1 = currentSlide
-            // picturebox2 = nextSlide, wipetransition
-            // currentSlideIndex++
+        
         private void wipeTransition(PictureBox slideWipeIn, int transitionType, int duration, string path) 
         {
             int movement = 20; // use the slide duration to set up the movement
@@ -202,28 +191,23 @@ namespace Viewer
         {
             if (currentSlideIndex == 0) {
 
-                //pictureBox1.Image = new Bitmap(nextSlide.Path);
-                //pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-                //pictureBox2.Image = new Bitmap(currentSlide.Path);
-                //pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
-
-                pictureBox1.Image = new Bitmap(currentSlide.Path);
-                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-                wipeTransition(pictureBox2, currentSlide.transitionType, currentSlide.Duration, currentSlide.Path);
+                pictureBox1.Image = new Bitmap(currentSlide.Path);  // set picturebox1 to be the current slide
+               // pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;     // trying to fit the picture to make it look better
+                wipeTransition(pictureBox2, currentSlide.transitionType, currentSlide.Duration, currentSlide.Path); // perform the wipe
                 
-                setupSlideChangeTimer(currentSlide);
-                pictureBox1.Image = new Bitmap(currentSlide.Path);
-                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-                slideChangeTimer.Start();
+                setupSlideChangeTimer(currentSlide);                // call the timer
+                pictureBox1.Image = new Bitmap(currentSlide.Path);  // why is this called again
+               // pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;     // why is this called again
+                slideChangeTimer.Start();                           // start the timer
             }
             else if(currentSlideIndex < slideCount - 1)
             {
                 currentSlide = SlidesToPlay[currentSlideIndex];
                 nextSlide = SlidesToPlay[currentSlideIndex + 1];
                 pictureBox2.Image = new Bitmap(currentSlide.Path);
-                pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+                //pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
                 pictureBox1.Image = new Bitmap(nextSlide.Path);
-                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                //pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
                 wipeTransition(pictureBox2, currentSlide.transitionType, currentSlide.Duration, currentSlide.Path);
 
                 setupSlideChangeTimer(currentSlide);
@@ -235,7 +219,7 @@ namespace Viewer
                 pictureBox1.Visible = false;
                 currentSlide = SlidesToPlay[currentSlideIndex];
                 pictureBox2.Image = new Bitmap(currentSlide.Path);
-                pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+                //pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             }
             else if (currentSlideIndex == slideCount)
             {
@@ -243,52 +227,52 @@ namespace Viewer
                 slideChangeTimer.Stop();
             }
 
-            //if (currentSlideIndex == 0)//first slide; initialize boxes
+            //if (currentslideindex == 0)//first slide; initialize boxes
             //{
-            //    //Transition Functionality Here
-            //    Console.WriteLine("First slide");
-            //    //Change the images
-            //    pictureBox2.Image = new Bitmap(currentSlide.Path);
-            //    pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-            //    pictureBox1.Image = new Bitmap(nextSlide.Path);
-            //    pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            //    setupSlideChangeTimer(currentSlide);
-            //    slideChangeTimer.Start();
-            //    //currentSlideIndex += 1;
-            //    Console.WriteLine("Current slide is now: " + currentSlideIndex);
+            //    //transition functionality here
+            //    console.writeline("first slide");
+            //    //change the images
+            //    picturebox2.image = new bitmap(currentslide.path);
+            //    picturebox2.sizemode = pictureboxsizemode.stretchimage;
+            //    picturebox1.image = new bitmap(nextslide.path);
+            //    picturebox1.sizemode = pictureboxsizemode.stretchimage;
+            //    setupslidechangetimer(currentslide);
+            //    slidechangetimer.start();
+            //    //currentslideindex += 1;
+            //    console.writeline("current slide is now: " + currentslideindex);
 
             //}
-            //else if(currentSlideIndex == (slideCount - 1)) //Last slide; there isn't a current slide
+            //else if (currentslideindex == (slidecount - 1)) //last slide; there isn't a current slide
             //{
-            //    //Transition Functionality Here
-            //    Console.WriteLine("Last slide clause has been triggered");
-            //    //Change the images
-            //    pictureBox1.Visible = false;
-            //    currentSlide = SlidesToPlay[currentSlideIndex];
-            //    pictureBox2.Image = new Bitmap(currentSlide.Path);
-            //    pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-            //    //slideChangeTimer.Stop();
+            //    //transition functionality here
+            //    console.writeline("last slide clause has been triggered");
+            //    //change the images
+            //    picturebox1.visible = false;
+            //    currentslide = slidestoplay[currentslideindex];
+            //    picturebox2.image = new bitmap(currentslide.path);
+            //    picturebox2.sizemode = pictureboxsizemode.stretchimage;
+            //    //slidechangetimer.stop();
             //}
-            //else if(currentSlideIndex == slideCount)
+            //else if (currentslideindex == slidecount)
             //{
-            //    pictureBox2.Visible = false;
-            //    slideChangeTimer.Stop();
+            //    picturebox2.visible = false;
+            //    slidechangetimer.stop();
             //}
-            //else //Normal case
+            //else //normal case
             //{
-            //    //Transition Functionality Here
-            //    Console.WriteLine("Normal Case Clause has been triggered");
-            //    //Change the images
-            //    //currentSlideIndex += 1;
-            //    Console.WriteLine("Current slide is now: " + currentSlideIndex);
-            //    currentSlide = SlidesToPlay[currentSlideIndex];
-            //    nextSlide = SlidesToPlay[currentSlideIndex + 1];
-            //    pictureBox2.Image = new Bitmap(currentSlide.Path);
-            //    pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-            //    pictureBox1.Image = new Bitmap(nextSlide.Path);
-            //    pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            //    setupSlideChangeTimer(currentSlide);
-            //    slideChangeTimer.Start();
+            //    //transition functionality here
+            //    console.writeline("normal case clause has been triggered");
+            //    //change the images
+            //    //currentslideindex += 1;
+            //    console.writeline("current slide is now: " + currentslideindex);
+            //    currentslide = slidestoplay[currentslideindex];
+            //    nextslide = slidestoplay[currentslideindex + 1];
+            //    picturebox2.image = new bitmap(currentslide.path);
+            //    picturebox2.sizemode = pictureboxsizemode.stretchimage;
+            //    picturebox1.image = new bitmap(nextslide.path);
+            //    picturebox1.sizemode = pictureboxsizemode.stretchimage;
+            //    setupslidechangetimer(currentslide);
+            //    slidechangetimer.start();
             //}
         }
 
