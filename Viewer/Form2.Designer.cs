@@ -156,7 +156,6 @@
             // 
             // slideTransitionTimer
             // 
-            this.slideTransitionTimer.Tick += new System.EventHandler(this.slideTransitionTimer_Tick);
             // 
             // Form2
             // 

@@ -99,6 +99,15 @@ namespace Viewer
             Console.WriteLine("Timer Has Ticked");
             //slideTransitionTimer.Dispose();
             //Console.WriteLine("Timer Disposed");
+            if(currentSlideIndex != slideCount)
+            {
+                currentSlideIndex += 1;
+            }
+            else
+            {
+                slideTransitionTimer.Stop();
+                slideTransitionTimer.Dispose();
+            }
             changeSlides();
             slideTransitionTimer.Start();
             Console.WriteLine("New timer started by slide: " + currentSlideIndex + " set for " + slideTransitionTimer.Interval);
@@ -117,39 +126,49 @@ namespace Viewer
                 pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
                 setupTimer(currentSlide);
                 slideTransitionTimer.Start();
-                currentSlideIndex += 1;
+                //currentSlideIndex += 1;
                 Console.WriteLine("Current slide is now: " + currentSlideIndex);
 
             }
-            else if(currentSlideIndex == (slideCount - 2)) //Next to last slide, there isn't a next slide
+            /**else if(currentSlideIndex == (slideCount - 2)) //Next to last slide, there isn't a next slide
             {
                 //Transition Functionality Here
                 Console.WriteLine("Next to Last Slide Cluase Has Been Triggered");
                 //Change the images
                 pictureBox1.Visible = false;
-                currentSlideIndex += 1;
+                //currentSlideIndex += 1;
                 Console.WriteLine("Current slide is now: " + currentSlideIndex);
                 currentSlide = SlidesToPlay[currentSlideIndex];
+                nextSlide = SlidesToPlay[currentSlideIndex + 1];
                 pictureBox2.Image = new Bitmap(currentSlide.Path);
                 pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
                 setupTimer(currentSlide);
                 //slideTransitionTimer.Start();
 
             }
+    */
             else if(currentSlideIndex == (slideCount - 1)) //Last slide; there isn't a current slide
             {
                 //Transition Functionality Here
                 Console.WriteLine("Last slide clause has been triggered");
                 //Change the images
-                pictureBox2.Visible = false;
+                pictureBox1.Visible = false;
+                currentSlide = SlidesToPlay[currentSlideIndex];
+                pictureBox2.Image = new Bitmap(currentSlide.Path);
+                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
                 //slideTransitionTimer.Stop();
+            }
+            else if(currentSlideIndex == slideCount)
+            {
+                pictureBox2.Visible = false;
+                slideTransitionTimer.Stop();
             }
             else //Normal case
             {
                 //Transition Functionality Here
                 Console.WriteLine("Normal Case Clause has been triggered");
                 //Change the images
-                currentSlideIndex += 1;
+                //currentSlideIndex += 1;
                 Console.WriteLine("Current slide is now: " + currentSlideIndex);
                 currentSlide = SlidesToPlay[currentSlideIndex];
                 nextSlide = SlidesToPlay[currentSlideIndex + 1];
