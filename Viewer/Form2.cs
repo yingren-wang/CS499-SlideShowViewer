@@ -99,18 +99,18 @@ namespace Viewer
             Console.WriteLine("Timer Has Ticked");
             //slideTransitionTimer.Dispose();
             //Console.WriteLine("Timer Disposed");
-            if(currentSlideIndex != slideCount)
+            if (currentSlideIndex != slideCount)
             {
                 currentSlideIndex += 1;
+                changeSlides();
+                slideTransitionTimer.Start();
+                Console.WriteLine("New timer started by slide: " + currentSlideIndex + " set for " + slideTransitionTimer.Interval);
             }
             else
             {
                 slideTransitionTimer.Stop();
                 slideTransitionTimer.Dispose();
             }
-            changeSlides();
-            slideTransitionTimer.Start();
-            Console.WriteLine("New timer started by slide: " + currentSlideIndex + " set for " + slideTransitionTimer.Interval);
         }
 
         private void changeSlides()
