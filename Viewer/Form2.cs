@@ -66,7 +66,7 @@ namespace Viewer
             progressBar.ForeColor = System.Drawing.Color.DeepPink;
 
             //timer setup
-            
+            slideTransitionTimer.Tick += slideTransitionTimer_Tick;
             
         }
 
@@ -85,18 +85,23 @@ namespace Viewer
         private void setupTimer(Slide slideToTime)
         {
             //Get the time in millis
+            //slideTransitionTimer.Stop();
             slideTransitionTimer.Interval = (slideToTime.Duration * 1000);
-            slideTransitionTimer.Tick += slideTransitionTimer_Tick;
-            slideTransitionTimer.Start();
-            Console.WriteLine("New timer started by slide: " + currentSlideIndex + " set for " + slideTransitionTimer.Interval);
+            Console.WriteLine("Timer time interval has changed.");
+            //slideTransitionTimer.Start();
+
         }
 
         //Function to reset the timer whenever the current duration is over
         private void slideTransitionTimer_Tick(object sender, EventArgs e)
         {
-            Console.WriteLine("Timer Has Ticked");
             slideTransitionTimer.Stop();
+            Console.WriteLine("Timer Has Ticked");
+            //slideTransitionTimer.Dispose();
+            //Console.WriteLine("Timer Disposed");
             changeSlides();
+            slideTransitionTimer.Start();
+            Console.WriteLine("New timer started by slide: " + currentSlideIndex + " set for " + slideTransitionTimer.Interval);
         }
 
         private void changeSlides()
@@ -111,8 +116,10 @@ namespace Viewer
                 pictureBox1.Image = new Bitmap(nextSlide.Path);
                 pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
                 setupTimer(currentSlide);
+                slideTransitionTimer.Start();
                 currentSlideIndex += 1;
-                return;
+                Console.WriteLine("Current slide is now: " + currentSlideIndex);
+
             }
             else if(currentSlideIndex == (slideCount - 2)) //Next to last slide, there isn't a next slide
             {
@@ -121,11 +128,13 @@ namespace Viewer
                 //Change the images
                 pictureBox1.Visible = false;
                 currentSlideIndex += 1;
+                Console.WriteLine("Current slide is now: " + currentSlideIndex);
                 currentSlide = SlidesToPlay[currentSlideIndex];
                 pictureBox2.Image = new Bitmap(currentSlide.Path);
                 pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
                 setupTimer(currentSlide);
-                return;
+                //slideTransitionTimer.Start();
+
             }
             else if(currentSlideIndex == (slideCount - 1)) //Last slide; there isn't a current slide
             {
@@ -133,8 +142,7 @@ namespace Viewer
                 Console.WriteLine("Last slide clause has been triggered");
                 //Change the images
                 pictureBox2.Visible = false;
-                slideTransitionTimer.Stop();
-                return;
+                //slideTransitionTimer.Stop();
             }
             else //Normal case
             {
@@ -142,6 +150,7 @@ namespace Viewer
                 Console.WriteLine("Normal Case Clause has been triggered");
                 //Change the images
                 currentSlideIndex += 1;
+                Console.WriteLine("Current slide is now: " + currentSlideIndex);
                 currentSlide = SlidesToPlay[currentSlideIndex];
                 nextSlide = SlidesToPlay[currentSlideIndex + 1];
                 pictureBox2.Image = new Bitmap(currentSlide.Path);
@@ -149,9 +158,8 @@ namespace Viewer
                 pictureBox1.Image = new Bitmap(nextSlide.Path);
                 pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
                 setupTimer(currentSlide);
-                return;
+                //slideTransitionTimer.Start();
             }
-
         }
 
         private void playAndPauseButton_Click(object sender, EventArgs e)
