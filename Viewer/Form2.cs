@@ -202,12 +202,18 @@ namespace Viewer
         {
             if (currentSlideIndex == 0) {
 
-                pictureBox1.Image = new Bitmap(nextSlide.Path);
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-                pictureBox2.Image = new Bitmap(currentSlide.Path);
-                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-                // wipeTransition(pictureBox2, currentSlide.transitionType, currentSlide.Duration, currentSlide.Path);
+                //pictureBox1.Image = new Bitmap(nextSlide.Path);
+                //pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                //pictureBox2.Image = new Bitmap(currentSlide.Path);
+                //pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+
+                pictureBox1.Image = new Bitmap(currentSlide.Path);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                wipeTransition(pictureBox2, currentSlide.transitionType, currentSlide.Duration, currentSlide.Path);
+                
                 setupSlideChangeTimer(currentSlide);
+                pictureBox1.Image = new Bitmap(currentSlide.Path);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
                 slideChangeTimer.Start();
             }
             else if(currentSlideIndex < slideCount - 1)
@@ -215,9 +221,9 @@ namespace Viewer
                 currentSlide = SlidesToPlay[currentSlideIndex];
                 nextSlide = SlidesToPlay[currentSlideIndex + 1];
                 pictureBox2.Image = new Bitmap(currentSlide.Path);
-                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+                pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
                 pictureBox1.Image = new Bitmap(nextSlide.Path);
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
                 wipeTransition(pictureBox2, currentSlide.transitionType, currentSlide.Duration, currentSlide.Path);
 
                 setupSlideChangeTimer(currentSlide);
@@ -229,7 +235,7 @@ namespace Viewer
                 pictureBox1.Visible = false;
                 currentSlide = SlidesToPlay[currentSlideIndex];
                 pictureBox2.Image = new Bitmap(currentSlide.Path);
-                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+                pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             }
             else if (currentSlideIndex == slideCount)
             {
@@ -304,6 +310,10 @@ namespace Viewer
                 currentSlideIndex = 0;
                 currentSlide = SlidesToPlay[currentSlideIndex];
                 nextSlide = SlidesToPlay[currentSlideIndex + 1];
+                pictureBox1.Image = new Bitmap(nextSlide.Path);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                pictureBox2.Image = new Bitmap(currentSlide.Path);
+                pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
 
                 changeSlides();
                 
