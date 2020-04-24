@@ -487,7 +487,7 @@ namespace Viewer
                 case transitionTypes.wipeLeft:
                     width = (int)(this.Width * 0.98);
                     height = (int)(this.Height * 0.875);
-
+                    topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     bottomPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width, height)); //set the bottom layer as the new slide 
                     //bottomPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     topPictureBox.Image = ResizeImage(transitionBmpCurrent, new Size(width, height)); //set the top layer as the current slide
@@ -503,7 +503,7 @@ namespace Viewer
                     //topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     width = (int)(this.Width * 0.98);
                     height = (int)(this.Height * 0.875);
-
+                    topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     bottomPictureBox.Image = ResizeImage(transitionBmpCurrent, new Size(width, height));
                     topPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width, height));
                     topPictureBox.Width = 0;
@@ -516,7 +516,7 @@ namespace Viewer
                 case transitionTypes.wipeUp:
                     width = (int)(this.Width * 0.98);
                     height = (int)(this.Height * 0.875);
-
+                    topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     bottomPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width, height)); //set the bottom layer as the new slide 
                     //bottomPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     topPictureBox.Image = ResizeImage(transitionBmpCurrent, new Size(width, height)); //set the top layer as the current slide
@@ -533,7 +533,7 @@ namespace Viewer
 
                     width = (int)(this.Width * 0.98);
                     height = (int)(this.Height * 0.875);
-
+                    topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     bottomPictureBox.Image = ResizeImage(transitionBmpCurrent, new Size(width, height));
                     topPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width, height));
                     topPictureBox.Height = 0;
