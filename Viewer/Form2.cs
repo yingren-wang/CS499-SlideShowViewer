@@ -70,7 +70,7 @@ namespace Viewer
 
             //timer setup
             slideChangeTimer.Tick += slideChangeTimer_Tick;
-            
+            wipeTimer.Interval = 55;
         }
 
 
@@ -122,14 +122,7 @@ namespace Viewer
         private void wipeTransition(PictureBox slideWipeIn, int transitionType, int duration, string path) 
         {
             int movement = 10; // use the slide duration to set up the movement
-            //pictureBox2.Width = 1066;       // resetting picturebox2 size
-            //pictureBox2.Height = 532;
-            //pictureBox1.Width = 1066;       // resetting picturebox1 size
-            //pictureBox1.Height = 532;
-            //pictureBox1.Image = ResizeImage(new Bitmap(nextSlide.Path), new Size(1066, 532));       // set to next slide
-            //pictureBox2.Image = ResizeImage(new Bitmap(currentSlide.Path), new Size(1066, 532));    // set to current slide
-            //pictureBox1.Visible = false;    // setting picturebox1 to be invisible
-            wipeTimer.Interval = 55;
+
            
             switch (transitionType)
             {
@@ -195,13 +188,16 @@ namespace Viewer
 
             //pictureBox2.Image = new Bitmap(path);
             //pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-            
-            wipeTimer.Elapsed += (sender, e) => OnWipeTransitionEvent(sender, e, movement, transitionType);
+
             wipeTimer.Start();
+            wipeTimer.Elapsed += (sender, e) => OnWipeTransitionEvent(sender, e, movement, transitionType);
+            
         }
 
         private void OnWipeTransitionEvent(Object sender, System.Timers.ElapsedEventArgs e, int movement, int transitionType)
         {
+            Console.WriteLine("Transition Time Elapsed at time: " + DateTimeOffset.Now.ToUnixTimeMilliseconds());
+            Console.WriteLine("Transition Type Integer is: " + transitionType);
             switch (transitionType)
             {
                 case 0: // none
@@ -209,53 +205,64 @@ namespace Viewer
                     break;
 
                 case 1: // wipe left
-                    if (pictureBox2.Width > 0)
+
+                    Console.WriteLine("Case Wipe Left");
+                    if (pictureBox2.Width < 1066)
                     {
                         pictureBox2.Width -= movement;
                     }
                     else
                     {
+                        Console.WriteLine("Wipe Left Timer Has Been Stopped");
                         wipeTimer.Stop();
                         Console.WriteLine("timer is stopped");
                     }
                     break;
                 case 2: // wipe right
-                    if (pictureBox2.Width < 1066)
+
+                    Console.WriteLine("Case Wipe Right");
+                    if (pictureBox1.Width > 0)
                     {
                         pictureBox2.Width += movement;
                     }
                     else
                     {
+                        Console.WriteLine("Wipe Right Timer Has Been Stopped");
                         wipeTimer.Stop();
                         Console.WriteLine("timer is stopped");
                     }
                     break;
                     
                 case 3: // wipe up
+                    Console.WriteLine("Case Wipe Up");
                     if (pictureBox2.Height > 0)
                     {
                         pictureBox2.Height -= movement;
                     }
                     else
                     {
+                        Console.WriteLine("Wipe Up Timer Has Been Stopped");
                         wipeTimer.Stop();
                         Console.WriteLine("timer is stopped");
                     }
                     break;
                 case 4: // wipe down
+                    Console.WriteLine("Case Wipe Down");
                     if (pictureBox2.Height < 532)
                     {
                         pictureBox2.Height += movement;
                     }
                     else
                     {
+                        Console.WriteLine("Wipe Down Timer Has Been Stopped");
                         wipeTimer.Stop();
                         Console.WriteLine("timer is stopped");
                     }
                     break;
-                    
-                //case 5: // crossfade
-                //    break;
+
+                    //case 5: // crossfade
+                    //          Console.WriteLine("Case Wipe Cross Fade");
+                    //    break;
             }
 
 
