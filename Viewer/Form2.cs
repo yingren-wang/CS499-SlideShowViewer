@@ -70,7 +70,7 @@ namespace Viewer
 
             //timer setup
             slideChangeTimer.Tick += slideChangeTimer_Tick;
-            
+            wipeTimer.Interval = 55;
         }
 
 
@@ -133,7 +133,6 @@ namespace Viewer
         {
             int movement = 10; // use the slide duration to set up the movement
             
-            wipeTimer.Interval = 55;
            
             switch (transitionType)
             {
@@ -211,6 +210,7 @@ namespace Viewer
                     }
                     else
                     {
+                        Console.WriteLine("Wipe Left Timer Has Been Stopped");
                         wipeTimer.Stop();
                     }
                     break;
@@ -222,6 +222,7 @@ namespace Viewer
                     }
                     else
                     {
+                        Console.WriteLine("Wipe Right Timer Has Been Stopped");
                         wipeTimer.Stop();
                     }
                     break;
@@ -246,6 +247,7 @@ namespace Viewer
                     }
                     else
                     {
+                        Console.WriteLine("Wipe Down Timer Has Been Stopped");
                         wipeTimer.Stop();
                     }
                     break;
