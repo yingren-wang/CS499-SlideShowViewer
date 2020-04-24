@@ -188,13 +188,15 @@ namespace Viewer
 
             //pictureBox2.Image = new Bitmap(path);
             //pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-
-            wipeTimer.Elapsed += (sender, e) => OnWipeTransitionEvent(sender, e, movement, transitionType);
             wipeTimer.Start();
+            wipeTimer.Elapsed += (sender, e) => OnWipeTransitionEvent(sender, e, movement, transitionType);
+            
         }
 
         private void OnWipeTransitionEvent(Object sender, System.Timers.ElapsedEventArgs e, int movement, int transitionType)
         {
+            Console.WriteLine("Transition Time Elapsed at time: " + DateTimeOffset.Now.ToUnixTimeMilliseconds());
+            Console.WriteLine("Transition Type Integer is: " + transitionType);
             switch (transitionType)
             {
                 case 0: // none
@@ -202,6 +204,7 @@ namespace Viewer
                     break;
 
                 case 1: // wipe left
+                    Console.WriteLine("Case Wipe Left");
                     if (pictureBox2.Width < 1066)
                     {
                         pictureBox2.Width += movement;
@@ -212,6 +215,7 @@ namespace Viewer
                     }
                     break;
                 case 2: // wipe right
+                    Console.WriteLine("Case Wipe Right");
                     if (pictureBox1.Width > 0)
                     {
                         pictureBox1.Width -= movement;
@@ -223,16 +227,19 @@ namespace Viewer
                     break;
                     
                 case 3: // wipe up
+                    Console.WriteLine("Case Wipe Up");
                     if (pictureBox2.Height > 0)
                     {
                         pictureBox2.Height -= movement;
                     }
                     else
                     {
+                        Console.WriteLine("Wipe Up Timer Has Been Stopped");
                         wipeTimer.Stop();
                     }
                     break;
                 case 4: // wipe down
+                    Console.WriteLine("Case Wipe Down");
                     if (pictureBox2.Height < 532)
                     {
                         pictureBox2.Height += movement;
@@ -242,9 +249,10 @@ namespace Viewer
                         wipeTimer.Stop();
                     }
                     break;
-                    
-                //case 5: // crossfade
-                //    break;
+
+                    //case 5: // crossfade
+                    //          Console.WriteLine("Case Wipe Cross Fade");
+                    //    break;
             }
 
 
