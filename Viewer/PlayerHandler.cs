@@ -10,11 +10,12 @@ namespace Viewer
 {
     public enum transitionType
     {
-        wipeLeft,
-        wipeRight,
-        wipeUp,
-        wipdeDown,
-        crossFade
+        none,       // 0
+        wipeLeft,   // 1
+        wipeRight,  // 2
+        wipeUp,     // 3
+        wipeDown,   // 4
+        crossFade   // 5
     }
 
     public class Slide

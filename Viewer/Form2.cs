@@ -73,6 +73,22 @@ namespace Viewer
             
         }
 
+
+        private static Image ResizeImage(Image imgToResize, Size size)
+        {
+            return (Image)(new Bitmap(imgToResize, size));
+        }
+
+        private void resizeSlides()
+        {
+            foreach(Slide slide in SlidesToPlay)
+            {
+
+            }
+        }
+
+        
+
         private void Close_Stop(object sender, FormClosedEventArgs e)
         {
             currentPlayer.Stop();
@@ -115,18 +131,59 @@ namespace Viewer
         
         private void wipeTransition(PictureBox slideWipeIn, int transitionType, int duration, string path) 
         {
-            int movement = 20; // use the slide duration to set up the movement
+            int movement = 10; // use the slide duration to set up the movement
             
             wipeTimer.Interval = 55;
-            // pictureBox2.Image = new Bitmap(slideWipeIn.Path);
+           
+            switch (transitionType)
+            {
+                case 0: // none
 
-            if(transitionType == 1) // wipe right
-            {
-                pictureBox2.Width = 0;
-            }
-            else if(transitionType == 3)
-            {
-                pictureBox2.Height = 0;
+                    break;
+
+
+                case 1: // wipe left
+                        // picturebox2 stays in front, picturebox2 wipes away, leaving picturebox 1 as the incoming slide.
+                        // after the transition is finished, picturebox2 get set to the new current slide, and is then re-sized and repositioned
+                        // to be in front of picturebox1
+                    pictureBox1.Visible = true;
+                    pictureBox2.Visible = true;
+                    pictureBox1.Image = ResizeImage(new Bitmap(currentSlide.Path), new Size(1066, 532));    // set to current slide
+                    pictureBox2.Image = ResizeImage(new Bitmap(nextSlide.Path), new Size(1066, 532));       // set to next slide
+                    
+                    break;
+
+                case 2: // wipe right
+                        // picturebox1's visability is set to true and the image gets set to current slide, picturebox2's width gets set to 0 and the image is set to the next slide.
+                        // picturebox2 slowly wipes over picturebox 1.  Once the wipe is done, picturebox1 is set to nextslide and visibility is set to false
+
+                    pictureBox1.Visible = true;
+                    pictureBox1.Image = ResizeImage(new Bitmap(currentSlide.Path), new Size(1066, 532));
+                    pictureBox2.Image = ResizeImage(new Bitmap(nextSlide.Path), new Size(1066, 532));
+                    pictureBox2.Width = 0;
+                    break;
+                case 3: // wipe up
+                        // picturebox1's visablity is set to true, picturebox1 image is set to current slide, picturebox2 is set to next slide and its height is set to 0
+                        // picturebox2 wipes over picturebox1.  once the wipe is done, picturebox1 is set to the nextslide and visablity is set to false
+
+                    pictureBox1.Visible = true;
+                    pictureBox1.Image = ResizeImage(new Bitmap(nextSlide.Path), new Size(1066, 532));       // set to next slide
+                    pictureBox2.Image = ResizeImage(new Bitmap(currentSlide.Path), new Size(1066, 532));    // set to current slide
+                    break;
+                case 4: // wipe down
+                        // picturebox1's visability is set to true, picturebox2 is current slide, picturebox1 is next slide
+                        // picturebox2 wipes down, revealing picturebox1.  After the transistion is finished, picturebox2 gets set to the new current slide
+                        // picturebox2 get set to the original size, and picturebox1 get set to the next slide and visability is set to false
+                    pictureBox1.Visible = true;
+                    pictureBox2.Visible = true;
+                    pictureBox1.Image = ResizeImage(new Bitmap(currentSlide.Path), new Size(1066, 532));
+                    pictureBox2.Image = ResizeImage(new Bitmap(nextSlide.Path), new Size(1066, 532));
+                    pictureBox2.Height = 0;
+
+                    
+                    break;
+                //case 5: // crossfade
+                //    break;
             }
 
             //pictureBox2.Image = new Bitmap(path);
@@ -140,19 +197,12 @@ namespace Viewer
         {
             switch (transitionType)
             {
-                case 0: // wipe left
-                    if (pictureBox2.Width > 0)
-                    {
-                        pictureBox2.Width -= movement;
-                    }
-                    else
-                    {
-                        wipeTimer.Stop();
-                    }
-                    break;
-                case 1: // wipe right
+                case 0: // none
 
-                    if (pictureBox2.Width < 800)
+                    break;
+
+                case 1: // wipe left
+                    if (pictureBox2.Width < 1066)
                     {
                         pictureBox2.Width += movement;
                     }
@@ -161,7 +211,18 @@ namespace Viewer
                         wipeTimer.Stop();
                     }
                     break;
-                case 2: // wipe up
+                case 2: // wipe right
+                    if (pictureBox1.Width > 0)
+                    {
+                        pictureBox1.Width -= movement;
+                    }
+                    else
+                    {
+                        wipeTimer.Stop();
+                    }
+                    break;
+                    
+                case 3: // wipe up
                     if (pictureBox2.Height > 0)
                     {
                         pictureBox2.Height -= movement;
@@ -171,9 +232,8 @@ namespace Viewer
                         wipeTimer.Stop();
                     }
                     break;
-                case 3: // wipe down
-
-                    if (pictureBox2.Height < 800)
+                case 4: // wipe down
+                    if (pictureBox2.Height < 532)
                     {
                         pictureBox2.Height += movement;
                     }
@@ -182,47 +242,82 @@ namespace Viewer
                         wipeTimer.Stop();
                     }
                     break;
-                //case 4: // crossfade
+                    
+                //case 5: // crossfade
                 //    break;
             }
+
+
         }
 
         private void changeSlides()
         {
             if (currentSlideIndex == 0) {
-
-                pictureBox1.Image = new Bitmap(currentSlide.Path);  // set picturebox1 to be the current slide
-               // pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;     // trying to fit the picture to make it look better
-                wipeTransition(pictureBox2, currentSlide.transitionType, currentSlide.Duration, currentSlide.Path); // perform the wipe
+                //---------------
+                // first slide
+                //---------------
                 
+                wipeTransition(pictureBox2, currentSlide.transitionType, currentSlide.Duration, currentSlide.Path); // perform the wipe
                 setupSlideChangeTimer(currentSlide);                // call the timer
-                pictureBox1.Image = new Bitmap(currentSlide.Path);  // why is this called again
-               // pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;     // why is this called again
-                slideChangeTimer.Start();                           // start the timer
+                slideChangeTimer.Start();       // start the timer
+                //currentSlide = SlidesToPlay[currentSlideIndex];     // update current slide
+                //nextSlide = SlidesToPlay[currentSlideIndex + 1];    // update next slide
+
+                // this happens post-transition
+                //pictureBox2.Width = 1066;       // resetting picturebox2 size
+                //pictureBox2.Height = 532;       
+                //pictureBox1.Width = 1066;       // resetting picturebox1 size
+                //pictureBox1.Height = 532;
+                //pictureBox1.Image = ResizeImage(new Bitmap(nextSlide.Path), new Size(1066, 532));       // set to next slide
+                //pictureBox2.Image = ResizeImage(new Bitmap(currentSlide.Path), new Size(1066, 532));    // set to current slide
+                //pictureBox1.Visible = false;    // setting picturebox1 to be invisible
             }
             else if(currentSlideIndex < slideCount - 1)
-            {
-                currentSlide = SlidesToPlay[currentSlideIndex];
-                nextSlide = SlidesToPlay[currentSlideIndex + 1];
-                pictureBox2.Image = new Bitmap(currentSlide.Path);
-                //pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
-                pictureBox1.Image = new Bitmap(nextSlide.Path);
-                //pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            {   //--------------------
+                // operating normally
+                //--------------------
+                currentSlide = SlidesToPlay[currentSlideIndex];     // update current slide
+                nextSlide = SlidesToPlay[currentSlideIndex + 1];    // update next slide
+                
+                // do the wipe
                 wipeTransition(pictureBox2, currentSlide.transitionType, currentSlide.Duration, currentSlide.Path);
-
                 setupSlideChangeTimer(currentSlide);
-                slideChangeTimer.Start();
+
+                // this happens post transition
+                pictureBox2.Width = 1066;       // resetting picturebox2 size
+                pictureBox2.Height = 532;
+                pictureBox1.Width = 1066;       // resetting picturebox1 size
+                pictureBox1.Height = 532;
+                pictureBox1.Image = ResizeImage(new Bitmap(nextSlide.Path), new Size(1066, 532));       // set to next slide
+                pictureBox2.Image = ResizeImage(new Bitmap(currentSlide.Path), new Size(1066, 532));    // set to current slide
+                //pictureBox1.Visible = false;    // setting picturebox1 to be invisible
+
+                slideChangeTimer.Start();       // start the timer
             }
-            else if(currentSlideIndex == slideCount - 1)
-            {
-                //Change the images
-                pictureBox1.Visible = false;
-                currentSlide = SlidesToPlay[currentSlideIndex];
-                pictureBox2.Image = new Bitmap(currentSlide.Path);
-                //pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            else if(currentSlideIndex == slideCount - 1) //
+            {   //------------
+                // last slide
+                //------------
+
+                //pictureBox1.Visible = false;    // set picturebox1 to invisible
+                
+                currentSlide = SlidesToPlay[currentSlideIndex]; // update current slide
+
+                wipeTransition(pictureBox2, currentSlide.transitionType, currentSlide.Duration, currentSlide.Path);
+                setupSlideChangeTimer(currentSlide);
+
+                pictureBox2.Width = 1066;       // resetting picturebox2 size
+                pictureBox2.Height = 532;
+                pictureBox2.Image = ResizeImage(new Bitmap(currentSlide.Path), new Size(1066, 532));    // set to current slide
+
+                //pictureBox1.Visible = false;
+                slideChangeTimer.Start();       // start the timer
             }
             else if (currentSlideIndex == slideCount)
-            {
+            {   //------------------
+                // end of slideshow
+                //------------------
+                pictureBox1.Visible = false;
                 pictureBox2.Visible = false;
                 slideChangeTimer.Stop();
             }
@@ -294,11 +389,8 @@ namespace Viewer
                 currentSlideIndex = 0;
                 currentSlide = SlidesToPlay[currentSlideIndex];
                 nextSlide = SlidesToPlay[currentSlideIndex + 1];
-                pictureBox1.Image = new Bitmap(nextSlide.Path);
-                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-                pictureBox2.Image = new Bitmap(currentSlide.Path);
-                pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
-
+                pictureBox1.Image = ResizeImage(new Bitmap(nextSlide.Path), new Size(1066, 532));    // set to current slide
+                pictureBox2.Image = ResizeImage(new Bitmap(currentSlide.Path), new Size(1066, 532));    // set to current slide
                 changeSlides();
                 
 
