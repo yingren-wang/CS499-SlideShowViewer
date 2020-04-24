@@ -84,9 +84,9 @@
             this.bottomPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.bottomPictureBox.Location = new System.Drawing.Point(9, 9);
+            this.bottomPictureBox.Location = new System.Drawing.Point(5, 8);
             this.bottomPictureBox.Name = "bottomPictureBox";
-            this.bottomPictureBox.Size = new System.Drawing.Size(1068, 576);
+            this.bottomPictureBox.Size = new System.Drawing.Size(1073, 578);
             this.bottomPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.bottomPictureBox.TabIndex = 6;
             this.bottomPictureBox.TabStop = false;
