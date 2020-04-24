@@ -13,6 +13,7 @@ using System.Timers;
 using System.Windows.Media;
 using System.Threading;
 using System.Windows.Threading;
+using System.Drawing.Imaging;
 
 namespace Viewer
 {
@@ -35,14 +36,19 @@ namespace Viewer
         private double pausedTime; //holds location in track during pause
         private int totalMinuteDuration = 0;
         private int totalSecondDuration = 0;
-        private int slideCount = 0;
-        private int currentSlideIndex = 0;
+        //private int slideCount = 0;
+        //private int currentSlideIndex = 0;
         private BackgroundWorker bgw = new BackgroundWorker(); //This is our worker that plays the musics and updates the progress bar
         private bool paused = false; //used to determine whether slideshow status is paused or playing
         private bool firstPlayPress = true; //to diffirentiate pause/resume from intial play click
         private bool resumeMusic = false;
-        private Slide currentSlide;
-        private Slide nextSlide;
+        //private Slide currentSlide;
+        //private Slide nextSlide;
+
+        //Jareds slide transition vars
+        private int slideListIndex =0;
+
+        private float Opacity = 1.0f;
 
 
         public Form2(List<SoundTrack> ListOfTracks, List<Slide> ListOfSlides)
@@ -65,9 +71,11 @@ namespace Viewer
             this.FormClosed += Close_Stop;
             progressBar.ForeColor = System.Drawing.Color.DeepPink;
 
-            //timer setup
-            slideTransitionTimer.Tick += slideTransitionTimer_Tick;
-            
+            slideTimer.Tick += DoTransition;
+            ////timer setup
+            //slideTransitionTimer.Tick += slideTransitionTimer_Tick;
+
+
         }
 
         private void Close_Stop(object sender, FormClosedEventArgs e)
@@ -82,107 +90,47 @@ namespace Viewer
 
         }
 
-        private void setupTimer(Slide slideToTime)
-        {
-            //Get the time in millis
-            //slideTransitionTimer.Stop();
-            slideTransitionTimer.Interval = (slideToTime.Duration * 1000);
-            Console.WriteLine("Timer time interval has changed.");
-            //slideTransitionTimer.Start();
-
-        }
-
-        //Function to reset the timer whenever the current duration is over
-        private void slideTransitionTimer_Tick(object sender, EventArgs e)
-        {
-            slideTransitionTimer.Stop();
-            Console.WriteLine("Timer Has Ticked");
-            //slideTransitionTimer.Dispose();
-            //Console.WriteLine("Timer Disposed");
-            if (currentSlideIndex != slideCount)
-            {
-                currentSlideIndex += 1;
-                changeSlides();
-                slideTransitionTimer.Start();
-                Console.WriteLine("New timer started by slide: " + currentSlideIndex + " set for " + slideTransitionTimer.Interval);
-            }
-            else
-            {
-                slideTransitionTimer.Stop();
-                slideTransitionTimer.Dispose();
-            }
-        }
-
-        private void changeSlides()
-        {
-            if (currentSlideIndex == 0)//first slide; initialize boxes
-            {
-                //Transition Functionality Here
-                Console.WriteLine("First slide");
-                //Change the images
-                pictureBox2.Image = new Bitmap(currentSlide.Path);
-                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-                pictureBox1.Image = new Bitmap(nextSlide.Path);
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-                setupTimer(currentSlide);
-                slideTransitionTimer.Start();
-                //currentSlideIndex += 1;
-                Console.WriteLine("Current slide is now: " + currentSlideIndex);
-
-            }
-            /**else if(currentSlideIndex == (slideCount - 2)) //Next to last slide, there isn't a next slide
-            {
-                //Transition Functionality Here
-                Console.WriteLine("Next to Last Slide Cluase Has Been Triggered");
-                //Change the images
-                pictureBox1.Visible = false;
-                //currentSlideIndex += 1;
-                Console.WriteLine("Current slide is now: " + currentSlideIndex);
-                currentSlide = SlidesToPlay[currentSlideIndex];
-                nextSlide = SlidesToPlay[currentSlideIndex + 1];
-                pictureBox2.Image = new Bitmap(currentSlide.Path);
-                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-                setupTimer(currentSlide);
-                //slideTransitionTimer.Start();
-
-            }
-    */
-            else if(currentSlideIndex == (slideCount - 1)) //Last slide; there isn't a current slide
-            {
-                //Transition Functionality Here
-                Console.WriteLine("Last slide clause has been triggered");
-                //Change the images
-                pictureBox1.Visible = false;
-                currentSlide = SlidesToPlay[currentSlideIndex];
-                pictureBox2.Image = new Bitmap(currentSlide.Path);
-                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-                //slideTransitionTimer.Stop();
-            }
-            else if(currentSlideIndex == slideCount)
-            {
-                pictureBox2.Visible = false;
-                slideTransitionTimer.Stop();
-            }
-            else //Normal case
-            {
-                //Transition Functionality Here
-                Console.WriteLine("Normal Case Clause has been triggered");
-                //Change the images
-                //currentSlideIndex += 1;
-                Console.WriteLine("Current slide is now: " + currentSlideIndex);
-                currentSlide = SlidesToPlay[currentSlideIndex];
-                nextSlide = SlidesToPlay[currentSlideIndex + 1];
-                pictureBox2.Image = new Bitmap(currentSlide.Path);
-                pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-                pictureBox1.Image = new Bitmap(nextSlide.Path);
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-                setupTimer(currentSlide);
-                //slideTransitionTimer.Start();
-            }
-        }
-
+       
         private void playAndPauseButton_Click(object sender, EventArgs e)
         {
+            //int opacity = 50;
+
+            if (firstPlayPress)
+            {
+
+                topPictureBox.BackColor = System.Drawing.Color.Black;
+                Slide firstSlide = SlidesToPlay.ElementAt(slideListIndex);
+                Image newImage = new Bitmap(firstSlide.Path);
+                //topPictureBox.Image = newImage;
+                topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                slideTimer.Interval = SlidesToPlay[0].Duration * 1000;
+                slideTimer.Enabled = true;
+                slideTimer.Start();
+
+                //topPictureBox.Image = newImage;
+
+                sourceBmp1 = (Bitmap)Image.FromStream(new MemoryStream(File.ReadAllBytes(firstSlide.Path)));
+                sourceBmp2 = new Bitmap(100,100);
+                using (Graphics gfx = Graphics.FromImage(sourceBmp2))
+                using (SolidBrush brush = new SolidBrush(System.Drawing.Color.FromArgb(0, 0, 0)))
+                {
+                    gfx.FillRectangle(brush, 0, 0, 100, 100);
+                }
+
+                fadeBmp1?.Dispose();
+                fadeBmp2?.Dispose();
+                fadeBmp1 = sourceBmp1.Clone() as Bitmap;
+                fadeBmp2 = sourceBmp2.Clone() as Bitmap;
+                topPictureBox.Invalidate();
+                transitionTimer.Interval = 200;
+                if(SlidesToPlay[0].transitionType == transitionTypes.crossFade)
+                {
+                    transitionTimer.Tick += DoFade;
+                    transitionTimer.Start();
+                }
+                // do other transitions on start
+            }
+
             //if button not pressed yet or music finished entirely, start play sequence (ie. first time click)
             if (musicPlaying == false && !bgw.IsBusy && paused == false)
             {
@@ -195,13 +143,19 @@ namespace Viewer
 
                 //Set up functionality for slides and timers
                 //get size of slideList
-                slideCount = SlidesToPlay.Count();
-                currentSlideIndex = 0;
-                currentSlide = SlidesToPlay[currentSlideIndex];
-                nextSlide = SlidesToPlay[currentSlideIndex + 1];
+                //slideCount = SlidesToPlay.Count();
+                //currentSlideIndex = 0;
+                //currentSlide = SlidesToPlay[currentSlideIndex];
+                //nextSlide = SlidesToPlay[currentSlideIndex + 1];
 
-                changeSlides();
-                
+                //changeSlides();
+
+                ///////////////////////////////////////new slide timer stuff from Jared///////////
+                ///
+                slideTimer.Interval = SlidesToPlay[slideListIndex].Duration * 1000;// convert to seconds
+                slideTimer.Enabled = true;
+                slideTimer.Start();
+
 
                 //calculate total duration for progress bar
                 foreach (SoundTrack track in SoundTracksToPlay)
@@ -223,7 +177,7 @@ namespace Viewer
                 musicPlaying = true;
                 paused = false;
                 resumeMusic = true;
-                slideTransitionTimer.Start();
+                slideTimer.Start();
                 //start music playing thread again
                 bgw.RunWorkerAsync();
             }
@@ -234,7 +188,7 @@ namespace Viewer
                 paused = true;
                 resumeMusic = false;
                 bgw.CancelAsync();
-                slideTransitionTimer.Stop();
+                slideTimer.Stop();
 
                 //reset progess bar at end
                 //progressBar.Value = 0;
@@ -404,6 +358,230 @@ namespace Viewer
             totalSecondDuration = totalDuration % 60;
         }
 
-        
+
+        //Jareds attempt at slide transitions///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void nextSlideButton_Click(object sender, EventArgs e)
+        {
+            //get the current and next slide in list
+            int nextSlideIndex = 0;
+            Slide currentSlide = SlidesToPlay.ElementAt(slideListIndex);
+
+            //check for out of bounds, then execute
+            if (slideListIndex < SlidesToPlay.Count - 1)
+            {
+                nextSlideIndex = slideListIndex + 1;
+                Slide nextSlide = SlidesToPlay.ElementAt(nextSlideIndex);
+
+                //call the transition
+                ChangeSlide(currentSlide, nextSlide);
+
+                slideListIndex = slideListIndex + 1;
+            }
+        }
+
+        private void prevSlideButton_Click(object sender, EventArgs e)
+        {
+            //get the current and next slide in list
+            int prevSlideIndex = 0;
+            Slide currentSlide = SlidesToPlay.ElementAt(slideListIndex);
+
+            //check for out of bounds, then execute
+            if (slideListIndex > 0)
+            {
+                prevSlideIndex = slideListIndex - 1;
+                Slide nextSlide = SlidesToPlay.ElementAt(prevSlideIndex);
+
+                //call the transition
+                ChangeSlide(currentSlide, nextSlide);
+                slideListIndex = slideListIndex - 1;
+            }
+        }
+
+        private void ChangeSlide(Slide current, Slide replacement)
+        {
+            slideTimer.Stop();
+            slideTimer.Interval = replacement.Duration * 1000;
+            slideTimer.Start();
+
+            int lrud = (int)replacement.transitionType; //for wipe transition types
+            
+            sourceBmp1?.Dispose();
+            sourceBmp2?.Dispose();
+            sourceBmp1 = (Bitmap)Image.FromStream(new MemoryStream(File.ReadAllBytes(replacement.Path)));
+            sourceBmp2 = (Bitmap)Image.FromStream(new MemoryStream(File.ReadAllBytes(current.Path)));
+            fadeBmp1?.Dispose();
+            fadeBmp2?.Dispose();
+            fadeBmp1 = sourceBmp1.Clone() as Bitmap;
+            fadeBmp2 = sourceBmp2.Clone() as Bitmap;
+            
+            switch (replacement.transitionType)
+            {
+                //CROSSFADE
+                case transitionTypes.crossFade:
+                    transitionTimer.Tick += DoFade;
+                    transitionTimer.Start();
+                    break;
+                case transitionTypes.wipeLeft:
+                case transitionTypes.wipeRight:
+                case transitionTypes.wipeUp:
+                case transitionTypes.wipeDown:
+                    //transitionTimer.Elapsed += DoWipe;
+                    //transitionTimer.Start();
+                    break;
+            }
+        }
+
+        private void DoTransition(object sender, EventArgs e)
+        {
+            if (slideListIndex < SlidesToPlay.Count - 1)
+            {
+                ChangeSlide(SlidesToPlay[slideListIndex], SlidesToPlay[++slideListIndex]);
+            }
+            else
+            {
+                slideTimer.Stop();
+                slideTimer.Enabled = false;
+            }
+        }
+
+        float opacity1 = 0.0f;
+        float opacity2 = 1.0f;
+        float increment = .2f;
+
+        private void DoFade(object sender, EventArgs e)
+        {
+            opacity1 += increment;
+            opacity2 -= increment;
+            fadeBmp1?.Dispose();
+            fadeBmp2?.Dispose();
+            fadeBmp1 = sourceBmp1.SetOpacity(opacity1);
+            fadeBmp2 = sourceBmp2.SetOpacity(opacity2);
+            topPictureBox.Invalidate();
+            if ((opacity1 >= 1.0f || opacity1 <= .0f) || (opacity2 >= 1.0f || opacity2 <= .0f))
+            {
+                transitionTimer.Stop();
+                //reset
+                opacity1 = 0.0f;
+                opacity2 = 1.0f;
+                increment = .2f;
+                transitionTimer.Tick -= DoFade;
+            }
+
+            //if (Opacity > 0) // If we haven't fully faded out yet...
+            //{
+            //    topPictureBox.Invalidate();
+            //    Bitmap bmp = new Bitmap(topPictureBox.Image.Width, topPictureBox.Image.Height);
+
+            //    Graphics g = Graphics.FromImage(bmp);
+            //    ColorMatrix colmat = new ColorMatrix();
+            //    colmat.Matrix33 = Opacity;
+            //    Opacity = Opacity - 0.1f; // increments of 10 (1 second transition)
+            //    ImageAttributes imgAttr = new ImageAttributes();
+            //    imgAttr.SetColorMatrix(colmat, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+            //    g.DrawImage(topPictureBox.Image, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, topPictureBox.Image.Width, topPictureBox.Image.Height, GraphicsUnit.Pixel, imgAttr);
+            //    g.Dispose();
+            //    // update the new fade in Image
+            //    topPictureBox.Image = bmp;
+            //}
+            //else // Stop the timer and reset Opacity for next applicable slide
+            //{
+            //    topPictureBox.Image = bottomPictureBox.Image;
+            //    transitionTimer.Stop();
+            //    transitionTimer.Tick -= DoFade;
+            //    Opacity = 1.0f;
+            //}
+        }
+
+
+
+
+
+
+
+        private void wipeTransition(PictureBox current, PictureBox next, int lrud)
+        {
+            //handle left,right,up,down
+            if (lrud == 1) //LEFT
+            {
+                //CODE FOR TRANSITIONING BETWEEN IMAGES
+            }
+            else if (lrud == 2)//RIGHT
+            {
+                //CODE FOR TRANSITIONING BETWEEN IMAGES
+            }
+            else if (lrud == 3)//UP
+            {
+                //CODE FOR TRANSITIONING BETWEEN IMAGES
+            }
+            else if (lrud == 4)//DOWN
+            {
+                //CODE FOR TRANSITIONING BETWEEN IMAGES
+            }
+        }
+
+
+        private void wipeTransitonPREV(PictureBox current, PictureBox prev, int lrud)
+        {
+            //handle left,right,up,down
+            if (lrud == 1) //LEFT
+            {
+                //CODE FOR TRANSITIONING BETWEEN IMAGES
+            }
+            else if (lrud == 2)//RIGHT
+            {
+                //CODE FOR TRANSITIONING BETWEEN IMAGES
+            }
+            else if (lrud == 3)//UP
+            {
+                //CODE FOR TRANSITIONING BETWEEN IMAGES
+            }
+            else if (lrud == 4)//DOWN
+            {
+                //CODE FOR TRANSITIONING BETWEEN IMAGES
+            }
+        }
+
+
+        private Bitmap sourceBmp1 = null;
+        private Bitmap sourceBmp2 = null;
+        private Bitmap fadeBmp1 = null;
+        private Bitmap fadeBmp2 = null;
+
+        private void topPictureBox_Paint(object sender, PaintEventArgs e)
+        {
+            if (fadeBmp1 == null || fadeBmp2 == null) return;
+            var units = GraphicsUnit.Pixel;
+            e.Graphics.DrawImage(fadeBmp2, new RectangleF(PointF.Empty, topPictureBox.ClientSize), fadeBmp2.GetBounds(ref units), units);
+            e.Graphics.DrawImage(fadeBmp1, new RectangleF(PointF.Empty, topPictureBox.ClientSize), fadeBmp1.GetBounds(ref units), units);
+        }
+    }
+
+    public static class BitmapExtensions
+    {
+        static float[][] fadeMatrix = {
+        new float[] {1, 0, 0, 0, 0},
+        new float[] {0, 1, 0, 0, 0},
+        new float[] {0, 0, 1, 0, 0},
+        new float[] {0, 0, 0, 1, 0},
+        new float[] {0, 0, 0, 0, 1}
+    };
+
+        public static Bitmap SetOpacity(this Bitmap bitmap, float Opacity, float Gamma = 1.0f)
+        {
+            var mx = new ColorMatrix(fadeMatrix);
+            mx.Matrix33 = Opacity;
+            var bmp = new Bitmap(bitmap.Width, bitmap.Height);
+
+            using (var g = Graphics.FromImage(bmp))
+            using (var attributes = new ImageAttributes())
+            {
+                attributes.SetGamma(Gamma, ColorAdjustType.Bitmap);
+                attributes.SetColorMatrix(mx, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+                g.Clear(System.Drawing.Color.Transparent);
+                g.DrawImage(bitmap, new Rectangle(0, 0, bmp.Width, bmp.Height),
+                    0, 0, bitmap.Width, bitmap.Height, GraphicsUnit.Pixel, attributes);
+                return bmp;
+            }
+        }
     }
 }

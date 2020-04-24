@@ -19,16 +19,18 @@ namespace Viewer
         private int transitionTime;
         public int TransitionTime { get; set; }
 
-        public enum transitionType
-        {
-            wipeLeft,
-            wipeRight,
-            wipeUp,
-            wipdeDown,
-            crossFade
-        }
+        public transitionTypes transitionType { get; set; }
 
+    }
 
+    public enum transitionTypes
+    {
+        none,
+        wipeLeft,
+        wipeRight,
+        wipeUp,
+        wipeDown,
+        crossFade
     }
 
     //struct to hold soundtrack information
