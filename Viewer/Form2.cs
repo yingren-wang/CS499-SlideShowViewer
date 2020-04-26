@@ -109,7 +109,7 @@ namespace Viewer
                 Slide firstSlide = SlidesToPlay.ElementAt(slideListIndex);
                 Image newImage = new Bitmap(firstSlide.Path);
                 //topPictureBox.Image = newImage;
-                topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;   // problem is with this line here
+                topPictureBox.SizeMode = PictureBoxSizeMode.Normal;   // problem is with this line here
                 slideTimer.Interval = SlidesToPlay[0].Duration * 1000;
                 slideTimer.Enabled = true;
                 slideTimer.Start();
@@ -479,7 +479,7 @@ namespace Viewer
                 //CROSSFADE
                 case transitionTypes.crossFade:
                     //topPictureBox.Image = transitionBmpCurrent; //set the top layer as the current slide
-                    topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                    topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     transitionTimer.Interval = 200;
                     transitionTimer.Tick += DoFade;
                     transitionTimer.Start();
@@ -703,8 +703,8 @@ namespace Viewer
             var units = GraphicsUnit.Pixel;
             if (SlidesToPlay[slideListIndex].transitionType == transitionTypes.crossFade)
             {
-                e.Graphics.DrawImage(transitionBmpCurrent, new RectangleF(PointF.Empty, topPictureBox.ClientSize), transitionBmpCurrent.GetBounds(ref units), units);
                 e.Graphics.DrawImage(transitionBmpNew, new RectangleF(PointF.Empty, topPictureBox.ClientSize), transitionBmpNew.GetBounds(ref units), units);
+                e.Graphics.DrawImage(transitionBmpCurrent, new RectangleF(PointF.Empty, topPictureBox.ClientSize), transitionBmpCurrent.GetBounds(ref units), units);
             }
             //else if (SlidesToPlay[slideListIndex].transitionType == transitionTypes.none)
             //{
