@@ -473,7 +473,6 @@ namespace Viewer
             transitionBmpNew = sourceBmpNew.Clone() as Bitmap;
             transitionBmpCurrent = sourceBmpCurrent.Clone() as Bitmap;
 
-            
             switch (replacement.transitionType)
             {
                 //CROSSFADE
@@ -574,8 +573,9 @@ namespace Viewer
             }
         }
 
-        private int shiftPercentage = 0;
-
+        // boolean as the condition to stop the transition timer
+        bool reached = false;
+        // amount to shift during each time interval
         int shiftAmount = 0;
         private void DoWipe(object sender, EventArgs e)
         {
@@ -591,7 +591,12 @@ namespace Viewer
                 //update by shift percentage calculation
                 //topPictureBox.SetBounds(x, y, width, height);
                 topPictureBox.Width -= shiftAmount;
-                shiftAmount = (int)(0.1 * topPictureBox.Width);
+                // equation: target picturebox width / (set transition time in second * 1000 / transition timer interval in milisecond)
+                shiftAmount = (int)(this.Width * 0.875) / ((SlidesToPlay[slideListIndex].TransitionTime * 1000 / transitionTimer.Interval));
+                if (topPictureBox.Width <= 0)
+                {
+                    reached = true;
+                }
             }
             if (SlidesToPlay[slideListIndex].transitionType == transitionTypes.wipeRight)
             {
@@ -606,7 +611,11 @@ namespace Viewer
                 //update by shift percentage calculation
                 //topPictureBox.SetBounds(x, y, width, height);
                 topPictureBox.Width += shiftAmount;
-                shiftAmount = (int)(0.1 * bottomPictureBox.Width);
+                shiftAmount = (int)(this.Width * 0.875) / ((SlidesToPlay[slideListIndex].TransitionTime * 1000 / transitionTimer.Interval));
+                if (topPictureBox.Width >= this.Width * 0.98)
+                {
+                    reached = true;
+                }
             }
             if (SlidesToPlay[slideListIndex].transitionType == transitionTypes.wipeUp)
             {
@@ -620,7 +629,12 @@ namespace Viewer
                 //update by shift percentage calculation
                 //topPictureBox.SetBounds(x, y, width, height);
                 topPictureBox.Height -= shiftAmount;
-                shiftAmount = (int)(0.1 * topPictureBox.Width);
+                shiftAmount = (int)(this.Height * 0.875) / ((SlidesToPlay[slideListIndex].TransitionTime * 1000 / transitionTimer.Interval));
+                
+                if (topPictureBox.Height <= 0)
+                {
+                    reached = true;
+                }
             }
             if (SlidesToPlay[slideListIndex].transitionType == transitionTypes.wipeDown)
             {                
@@ -634,17 +648,18 @@ namespace Viewer
                 //update by shift percentage calculation
                 //topPictureBox.SetBounds(x, y, width, height);
                 topPictureBox.Height += shiftAmount;
-                shiftAmount = (int)(0.1 * bottomPictureBox.Width);
+                shiftAmount = (int)(this.Height * 0.875) / ((SlidesToPlay[slideListIndex].TransitionTime * 1000 / transitionTimer.Interval));
+                if (topPictureBox.Height >= this.Height * 0.875)
+                {
+                    reached = true;
+                }
             }
                                                                
-            shiftPercentage += 10;
-
-
-            if (shiftPercentage > 100)
+            if (reached == true)
             {
                 transitionTimer.Stop();
                 //reset
-                shiftPercentage = 0;
+                reached = false;
                 transitionTimer.Tick -= DoWipe;
 
                 //reset picture box bounds
