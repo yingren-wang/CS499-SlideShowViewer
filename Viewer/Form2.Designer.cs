@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.displayedSlidePanel = new System.Windows.Forms.Panel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.topPictureBox = new System.Windows.Forms.PictureBox();
             this.bottomPictureBox = new System.Windows.Forms.PictureBox();
             this.elapsedTimeLabel = new System.Windows.Forms.Label();
@@ -52,6 +53,7 @@
             this.displayedSlidePanel.BackColor = System.Drawing.Color.Transparent;
             this.displayedSlidePanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("displayedSlidePanel.BackgroundImage")));
             this.displayedSlidePanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.displayedSlidePanel.Controls.Add(this.textBox1);
             this.displayedSlidePanel.Controls.Add(this.topPictureBox);
             this.displayedSlidePanel.Controls.Add(this.bottomPictureBox);
             this.displayedSlidePanel.Controls.Add(this.elapsedTimeLabel);
@@ -65,6 +67,16 @@
             this.displayedSlidePanel.Name = "displayedSlidePanel";
             this.displayedSlidePanel.Size = new System.Drawing.Size(1088, 635);
             this.displayedSlidePanel.TabIndex = 0;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Font = new System.Drawing.Font("Arial Black", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Location = new System.Drawing.Point(0, 389);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(1088, 41);
+            this.textBox1.TabIndex = 8;
+            this.textBox1.Text = "The slideshow has ended. Thank you for using SlideBySide!";
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // topPictureBox
             // 
@@ -192,5 +204,6 @@
         private System.Windows.Forms.PictureBox topPictureBox;
         private System.Windows.Forms.PictureBox bottomPictureBox;
         private System.Windows.Forms.Timer transitionTimer;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

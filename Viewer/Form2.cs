@@ -46,14 +46,14 @@ namespace Viewer
         //private Slide currentSlide;
         //private Slide nextSlide;
         
-        
         //Jareds slide transition vars
         private int slideListIndex =0;
 
         public Form2(List<SoundTrack> ListOfTracks, List<Slide> ListOfSlides)
         {
             InitializeComponent();
-
+            // hide two textbox for saying goodbye at the beginning
+            textBox1.Visible = false;
             //used for handling the playing of multiple tracks in succession
             myDispatcher = Dispatcher.CurrentDispatcher;
             currentPlayer.MediaFailed += (s, e) => { Console.WriteLine("Media Failed to play...\n"); };
@@ -563,6 +563,14 @@ namespace Viewer
             {
                 slideTimer.Stop();
                 slideTimer.Enabled = false;
+                // hide both pictureboxes if there's no more to display
+                topPictureBox.Hide();
+                bottomPictureBox.Hide();
+                // show the textbox saying goodbye to users
+                textBox1.Size = new Size(this.Width, textBox1.Height);
+                textBox1.Location = new Point(0, (int)(this.Height * 0.673));
+                textBox1.TextAlign = HorizontalAlignment.Center;
+                textBox1.Visible = true;
             }
         }
 
