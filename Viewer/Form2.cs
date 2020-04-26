@@ -110,9 +110,7 @@ namespace Viewer
                 Image newImage = new Bitmap(firstSlide.Path);
                 //topPictureBox.Image = newImage;
                 topPictureBox.SizeMode = PictureBoxSizeMode.Normal;   // problem is with this line here
-                slideTimer.Interval = SlidesToPlay[0].Duration * 1000;
-                slideTimer.Enabled = true;
-                slideTimer.Start();
+                
 
                 //topPictureBox.Image = newImage;
                 topPictureBox.Invalidate();
@@ -195,6 +193,7 @@ namespace Viewer
                    // PictureBox newBox = new PictureBox();
                    // topPictureBox = newBox;
                 }
+                
             }
 
             //if button not pressed yet or music finished entirely, start play sequence (ie. first time click)
@@ -209,9 +208,9 @@ namespace Viewer
 
                 ///////////////////////////////////////new slide timer stuff from Jared///////////
                 ///
-                slideTimer.Interval = SlidesToPlay[slideListIndex].Duration * 1000;// convert to seconds
-                slideTimer.Enabled = true;
-                slideTimer.Start();
+                //slideTimer.Interval = SlidesToPlay[slideListIndex].Duration * 1000;// convert to seconds
+                //slideTimer.Enabled = true;
+                //slideTimer.Start();
 
 
                 //calculate total duration for progress bar
@@ -234,7 +233,7 @@ namespace Viewer
                 musicPlaying = true;
                 paused = false;
                 resumeMusic = true;
-                slideTimer.Start();
+                //slideTimer.Start();
                 //start music playing thread again
                 bgw.RunWorkerAsync();
             }
@@ -245,7 +244,7 @@ namespace Viewer
                 paused = true;
                 resumeMusic = false;
                 bgw.CancelAsync();
-                slideTimer.Stop();
+                //slideTimer.Stop();
 
                 //reset progess bar at end
                 //progressBar.Value = 0;
@@ -256,6 +255,9 @@ namespace Viewer
                 //totalDuration = 0;
                 //numTracksToPlay = 0;
             }
+            slideTimer.Interval = SlidesToPlay[0].Duration * 1000;
+            slideTimer.Enabled = true;
+            slideTimer.Start();
         }
 
         // Run async so the music can play and the progress bar update so the UI thread isn't
@@ -459,8 +461,6 @@ namespace Viewer
         private void ChangeSlide(Slide current, Slide replacement)
         {
             slideTimer.Stop();
-            slideTimer.Interval = replacement.Duration * 1000;
-            slideTimer.Start();
 
             var width = -1;
             var height = -1;
@@ -549,6 +549,9 @@ namespace Viewer
                     topPictureBox.Invalidate();
                     break;
             }
+            
+            slideTimer.Interval = replacement.Duration * 1000;
+            slideTimer.Start();
         }
 
 
