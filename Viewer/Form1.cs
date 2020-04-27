@@ -26,6 +26,8 @@ namespace Viewer
         //Variable Declaration
         int showDuration;
 
+        bool hasShow = false;
+
         public Form1()
         {
             ofd = new OpenFileDialog();
@@ -85,7 +87,7 @@ namespace Viewer
                     
                 }
 
-                
+                hasShow = true;
             }
             else
             {
@@ -155,9 +157,17 @@ namespace Viewer
 
         private void playButton_Click(object sender, EventArgs e)
         {
-            //make a window for playing the show and display it (passing in current Lists)
-            Form2 showWindow = new Form2(ph.ImportedSoundTrackList, ph.ImportedSlidesList);
-            showWindow.ShowDialog();
+            if (hasShow)
+            {
+                //make a window for playing the show and display it (passing in current Lists)
+                Form2 showWindow = new Form2(ph.ImportedSoundTrackList, ph.ImportedSlidesList);
+                showWindow.ShowDialog();
+            }
+            else
+            {
+                Console.WriteLine("Please add a slideshow to play");
+            }
+            
         }
 
         private void slideDisplayPanel_Paint(object sender, PaintEventArgs e)
