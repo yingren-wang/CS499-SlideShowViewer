@@ -552,11 +552,12 @@ namespace Viewer
                     bottomPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width, height));
                     //bottomPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     topPictureBox.Invalidate();
+                    slideTimer.Interval = replacement.Duration * 1000;
+                    slideTimer.Start();
                     break;
             }
             
             slideTimer.Interval = replacement.Duration * 1000;
-            slideTimer.Start();
         }
 
 
@@ -692,8 +693,8 @@ namespace Viewer
                         topPictureBox.SetBounds(bottomPictureBox.Bounds.X, bottomPictureBox.Bounds.Y, bottomPictureBox.Bounds.Width, bottomPictureBox.Bounds.Height);
                         break;
                 }
-                
 
+                slideTimer.Start();
             }
             topPictureBox.Invalidate();
         }
@@ -719,8 +720,9 @@ namespace Viewer
                 opacity2 = 1.0f;
                 increment = .2f;
                 transitionTimer.Tick -= DoFade;
+                slideTimer.Start();
             }
-
+            
         }
                              
         private Bitmap sourceBmpNew = null;
