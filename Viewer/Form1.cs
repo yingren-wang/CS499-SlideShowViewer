@@ -27,7 +27,6 @@ namespace Viewer
         int showDuration;
 
         bool hasShow = false;
-
         public Form1()
         {
             ofd = new OpenFileDialog();
@@ -39,7 +38,6 @@ namespace Viewer
                 "that you created. \n\n Review your slides, and then click on the \"Start Show\" button when ready!";
         }
 
-
         private void pb_MouseDown(object sender, MouseEventArgs e)
         {
             PictureBox pb = (PictureBox)sender;
@@ -48,7 +46,6 @@ namespace Viewer
             pictureBox1.Image = new Bitmap(pb.Image);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
         }
-
 
         private void fileOpenButton_Click(object sender, EventArgs e)
         {
@@ -91,7 +88,6 @@ namespace Viewer
             }
             else
             {
-                //TODO: UPDATE INSTRUCTIONS BOX
                 Console.WriteLine("Could not open project folder");
             }
 
@@ -99,8 +95,6 @@ namespace Viewer
             //populate soundtracks
             populateSoundTrackBar();
             populateSlideBar();
-            //populate the slides
-            //@TODO: Chandler call your function to put the images in preview panes here!
         }
 
 
@@ -128,8 +122,6 @@ namespace Viewer
                 musicLayoutPanel.Controls.Clear();
                 foreach (SoundTrack track in ph.ImportedSoundTrackList)
                 {
-                    //string trackName = Path.GetFileName(track.Path);
-
                     //build new panel
                     Panel newSoundTrackPanel = new Panel();
                     Label newSoundTrackLabel = new Label();

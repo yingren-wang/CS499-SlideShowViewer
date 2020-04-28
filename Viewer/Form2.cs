@@ -38,15 +38,10 @@ namespace Viewer
         private int totalMinuteDuration = 0;
         private int totalSecondDuration = 0;
         //private int slideCount = 0;
-        //private int currentSlideIndex = 0;
         private BackgroundWorker bgw = new BackgroundWorker(); //This is our worker that plays the musics and updates the progress bar
         private bool paused = false; //used to determine whether slideshow status is paused or playing
         private bool firstPlayPress = true; //to diffirentiate pause/resume from intial play click
         private bool resumeMusic = false;
-        //private Slide currentSlide;
-        //private Slide nextSlide;
-        
-        //Jareds slide transition vars
         private int slideListIndex =0;
 
         public Form2(List<SoundTrack> ListOfTracks, List<Slide> ListOfSlides)
@@ -98,21 +93,16 @@ namespace Viewer
 
         private void playAndPauseButton_Click(object sender, EventArgs e)
         {
-            //int opacity = 50;
             var width2 = -1;
             var height2 = -1;
             
             if (firstPlayPress)
             {
-                
                 topPictureBox.BackColor = System.Drawing.Color.Black;
                 Slide firstSlide = SlidesToPlay.ElementAt(slideListIndex);
                 Image newImage = new Bitmap(firstSlide.Path);
-                //topPictureBox.Image = newImage;
-                topPictureBox.SizeMode = PictureBoxSizeMode.Normal;   // problem is with this line here
+                topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                 
-
-                //topPictureBox.Image = newImage;
                 topPictureBox.Invalidate();
                 sourceBmpNew = (Bitmap)Image.FromStream(new MemoryStream(File.ReadAllBytes(firstSlide.Path)));
                 sourceBmpCurrent = new Bitmap(100,100);
@@ -139,9 +129,7 @@ namespace Viewer
                     height2 = (int)(this.Height * 0.875);
                     topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     bottomPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width2, height2)); //set the bottom layer as the new slide 
-                    //bottomPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     topPictureBox.Image = ResizeImage(transitionBmpCurrent, new Size(width2, height2)); //set the top layer as the current slide
-                    //topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     transitionTimer.Tick += DoWipe;
                     transitionTimer.Start();
                 }
@@ -151,10 +139,8 @@ namespace Viewer
                     height2 = (int)(this.Height * 0.875);
                     topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     bottomPictureBox.Image = ResizeImage(transitionBmpCurrent, new Size(width2, height2)); //set the bottom layer as the new slide 
-                    //bottomPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     topPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width2, height2)); //set the top layer as the current slide
                     topPictureBox.Width = 0;
-                    //topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     transitionTimer.Tick += DoWipe;
                     transitionTimer.Start();
                 }
@@ -164,9 +150,7 @@ namespace Viewer
                     height2 = (int)(this.Height * 0.875);
                     topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     bottomPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width2, height2)); //set the bottom layer as the new slide 
-                    //bottomPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     topPictureBox.Image = ResizeImage(transitionBmpCurrent, new Size(width2, height2)); //set the top layer as the current slide
-                    //topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     transitionTimer.Tick += DoWipe;
                     transitionTimer.Start();
                 }
@@ -176,9 +160,7 @@ namespace Viewer
                     height2 = (int)(this.Height * 0.875);
                     topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     bottomPictureBox.Image = ResizeImage(transitionBmpCurrent, new Size(width2, height2)); //set the bottom layer as the new slide 
-                    //bottomPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     topPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width2, height2)); //set the top layer as the current slide
-                    //topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     topPictureBox.Height = 0;
                     transitionTimer.Tick += DoWipe;
                     transitionTimer.Start();
@@ -189,11 +171,6 @@ namespace Viewer
                     height2 = (int)(this.Height * 0.875);
                     topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     topPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width2, height2)); //set the bottom layer as the new slide 
-                    //topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-
-                    //topPictureBox.Image.;
-                   // PictureBox newBox = new PictureBox();
-                   // topPictureBox = newBox;
                 }
                 
             }
@@ -207,13 +184,6 @@ namespace Viewer
                 firstPlayPress = true;
                 paused = false;
                 numTracksToPlay = SoundTracksToPlay.Count;
-
-                ///////////////////////////////////////new slide timer stuff from Jared///////////
-                ///
-                //slideTimer.Interval = SlidesToPlay[slideListIndex].Duration * 1000;// convert to seconds
-                //slideTimer.Enabled = true;
-                //slideTimer.Start();
-
 
                 //calculate total duration for progress bar
                 foreach (SoundTrack track in SoundTracksToPlay)
@@ -235,7 +205,6 @@ namespace Viewer
                 musicPlaying = true;
                 paused = false;
                 resumeMusic = true;
-                //slideTimer.Start();
                 //start music playing thread again
                 bgw.RunWorkerAsync();
             }
@@ -246,16 +215,6 @@ namespace Viewer
                 paused = true;
                 resumeMusic = false;
                 bgw.CancelAsync();
-                //slideTimer.Stop();
-
-                //reset progess bar at end
-                //progressBar.Value = 0;
-                //progressBar.Update();
-                // reset tracks played
-                //tracksPlayed = 0;
-                // reset duration
-                //totalDuration = 0;
-                //numTracksToPlay = 0;
             }
             slideTimer.Interval = SlidesToPlay[0].Duration * 1000;
             slideTimer.Enabled = true;
@@ -479,7 +438,6 @@ namespace Viewer
             {
                 //CROSSFADE
                 case transitionTypes.crossFade:
-                    //topPictureBox.Image = transitionBmpCurrent; //set the top layer as the current slide
                     topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     transitionTimer.Interval = 200;
                     transitionTimer.Tick += DoFade;
@@ -490,25 +448,18 @@ namespace Viewer
                     height = (int)(this.Height * 0.875);
                     topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     bottomPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width, height)); //set the bottom layer as the new slide 
-                    //bottomPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     topPictureBox.Image = ResizeImage(transitionBmpCurrent, new Size(width, height)); //set the top layer as the current slide
-                    //topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     transitionTimer.Interval = 75;
                     transitionTimer.Tick += DoWipe;
                     transitionTimer.Start();
                     break;
                 case transitionTypes.wipeRight:
-                    //bottomPictureBox.Image = ResizeImage(transitionBmpNew, this.Size); //set the bottom layer as the new slide 
-                    //bottomPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-                    //topPictureBox.Image = ResizeImage(transitionBmpCurrent, this.Size); //set the top layer as the current slide
-                    //topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     width = (int)(this.Width * 0.98);
                     height = (int)(this.Height * 0.875);
                     topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     bottomPictureBox.Image = ResizeImage(transitionBmpCurrent, new Size(width, height));
                     topPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width, height));
                     topPictureBox.Width = 0;
-                    
 
                     transitionTimer.Interval = 75;
                     transitionTimer.Tick += DoWipe;
@@ -519,19 +470,12 @@ namespace Viewer
                     height = (int)(this.Height * 0.875);
                     topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     bottomPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width, height)); //set the bottom layer as the new slide 
-                    //bottomPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     topPictureBox.Image = ResizeImage(transitionBmpCurrent, new Size(width, height)); //set the top layer as the current slide
-                    //topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     transitionTimer.Interval = 75;
                     transitionTimer.Tick += DoWipe;
                     transitionTimer.Start();
                     break;
                 case transitionTypes.wipeDown:
-                    //bottomPictureBox.Image = ResizeImage(transitionBmpNew, this.Size); //set the bottom layer as the new slide 
-                    //bottomPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-                    //topPictureBox.Image = ResizeImage(transitionBmpCurrent, this.Size); //set the top layer as the current slide
-                    //topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-
                     width = (int)(this.Width * 0.98);
                     height = (int)(this.Height * 0.875);
                     topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
@@ -548,9 +492,7 @@ namespace Viewer
                     height = (int)(this.Height * 0.875);
                     topPictureBox.SizeMode = PictureBoxSizeMode.Normal;
                     topPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width, height)); //set the top layer as the current slide
-                    //topPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     bottomPictureBox.Image = ResizeImage(transitionBmpNew, new Size(width, height));
-                    //bottomPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                     topPictureBox.Invalidate();
                     slideTimer.Interval = replacement.Duration * 1000;
                     slideTimer.Start();
@@ -598,7 +540,6 @@ namespace Viewer
                 int height = topPictureBox.Bounds.Height;
 
                 //update by shift percentage calculation
-                //topPictureBox.SetBounds(x, y, width, height);
                 topPictureBox.Width -= shiftAmount;
                 // equation: target picturebox width / (set transition time in second * 1000 / transition timer interval in milisecond)
                 shiftAmount = (int)(this.Width * 0.875) / ((SlidesToPlay[slideListIndex].TransitionTime * 1000 / transitionTimer.Interval));
@@ -739,11 +680,6 @@ namespace Viewer
                 e.Graphics.DrawImage(transitionBmpNew, new RectangleF(PointF.Empty, topPictureBox.ClientSize), transitionBmpNew.GetBounds(ref units), units);
                 e.Graphics.DrawImage(transitionBmpCurrent, new RectangleF(PointF.Empty, topPictureBox.ClientSize), transitionBmpCurrent.GetBounds(ref units), units);
             }
-            //else if (SlidesToPlay[slideListIndex].transitionType == transitionTypes.none)
-            //{
-            //    e.Graphics.DrawImage(transitionBmpNew, new RectangleF(PointF.Empty, topPictureBox.ClientSize), transitionBmpNew.GetBounds(ref units), units);
-            //}
-
         }
     }
 
